@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Rabaie Benameur</title>
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="style.css">
+
+    <!--box icon-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+	
+	
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('BPS3zjorGVvRtfCsW'); // Replace with your EmailJS public key
+</script>
+
+
+</head>
+<body>
+
+    <!--header design-->
+    <header class="header">
+        <a href="#" class="logo">Rabaie Benameur.</a>
+
+        <nav class="navbar">
+            <a href="index.html#home" class="active">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#services">Services</a>
+            <a href="index.html#portfolio">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+    </header> 
+   
+
+
+        <!--home section-->
+    <section class="home" id="home">
+
+        <div class="home-content">
+            <h3>Hello, I am</h3>
+            <h1>Rabaie Benameur</h1>
+            <p>I hold a Ph.D. in Cyber Security Systems and Networks, with research focused on machine learning, deep learning, and federated learning. I have published in peer-reviewed journals and major conferences, contributing to the intersection of cybersecurity and AI, and establishing myself as a researcher in secure and intelligent systems.</p>
+
+      <div class="social-media">
+                <a href="https://linkedin.com/in/rabaie-benameur-79b257201" target="_blank"><i class='bx bxl-linkedin'></i></a>
+                <a href="https://github.com/benameurrabaie" target="_blank"><i class='bx bxl-github'></i></a>
+                <a href="https://www.udemy.com/user/rabaie-benameur/" target="_blank"><i class='bx bxs-graduation'></i></a>
+                <a href="https://www.researchgate.net/profile/Rabaie-Benameur" target="_blank"><i class='bx bxs-user-detail'></i></a>
+                <a href="https://scholar.google.com/citations?user=reAf4ckAAAAJ&hl" target="_blank"><i class='bx bxs-book-alt'></i></a>
+            </div>
+            
+            
+
+            <a href="https://github.com/benameurrabaie/portfolio/blob/c0e6df6d70d5d651fa67f78bbb4de803b2b09df9/cv.pdf" class="btn">Download CV</a>
+       
+        </div>
+
+        <div class="profession-container">
+            <div class="profession-box">
+        
+                <div class="profession" style="--i:0;">
+                    <!-- AI / Data / Science -->
+                    <i class='bx bxs-brain'></i>
+                    <h3>Applied AI Scientist</h3>
+                </div>
+        
+                <div class="profession" style="--i:1;">
+                    <!-- IoT / Devices / Sensors -->
+                    <i class='bx bxs-chip'></i>
+                    <h3>IoT Developer</h3>
+                </div>
+        
+                <div class="profession" style="--i:2;">
+                    <!-- Blockchain / Security -->
+                    <i class='bx bxs-lock-alt'></i>
+                    <h3>Blockchain Architect</h3>
+                </div>
+        
+                <div class="profession" style="--i:3;">
+                    <!-- Full-Stack / Web Dev -->
+                    <i class='bx bx-code-alt'></i>
+                    <h3>Full-Stack Developer</h3>
+                </div>
+        
+                <div class="circle"></div>
+            </div>
+        
+            <div class="overlay"></div>
+        </div>
+        
+
+        <div class="home-img">
+            <img src="images/dragonpng.png" alt=""> 
+        </div>
+
+    </section>
+
+
+    <!--portfolio section-->
+<!-- Complete Article Section -->
+<article class="article" id="article" style="margin-top: 100px;" itemscope itemtype="https://schema.org/ScholarlyArticle">
+    <header class="article-header">
+        <h2 class="heading"><span itemprop="name">Project 2</span></h2>
+        <h3 class="article-title" itemprop="headline">PNR Project: Smart Low-Cost Irrigation for Family Multi-Farms Environments</h3>
+        <p class="article-meta">
+            <span itemprop="about">Type: IoT, Federated Learning, Blockchain</span><br>
+            <time datetime="2025-06-01" itemprop="datePublished">Publication Date: June 2025</time>
+        </p>
+    </header>
+
+    <section class="article-body" itemprop="articleBody">
+        <p>
+            The PNR Project addresses the challenges smallholders face in adopting smart farming technologies by proposing a cost-effective and locally manageable irrigation control system. Unlike conventional setups that rely on expensive cloud services, the PNR Project utilizes a decentralized, on-site architecture to reduce cost and complexity.
+        </p>
+
+        <figure>
+            <img src="images/Article2/arch.png" alt="Low-cost smart irrigation architecture" itemprop="image">
+            <figcaption> Global Architecture of the Collaborative Agri-FMFs Platform, including (1) acquisition nodes, (2)
+wireless communication channels, (3) IoT gateways, (4) blockchain full node containers, and (5) MQTT protocol.</figcaption>
+        </figure>
+
+        <p>
+            The system employs off-the-shelf sensors and Raspberry Pi-based gateways to create a fully autonomous solution. Leveraging LoRa communication, the PNR Project ensures long-range, low-power data transmission—ideal for rural deployments with limited connectivity. Edge intelligence is enabled using AI accelerators like Google Coral TPU, supporting real-time decision-making without cloud dependency.
+        </p>
+
+        <figure>
+            <img src="images/article1/devices.jpg" alt="Sensor and gateway integration with LoRa" itemprop="image">
+            <figcaption>Low-cost sensors communicating with gateway using LoRa technology</figcaption>
+        </figure>
+
+        <p>
+            An adaptive Decision Support System (DSS) integrates sensor feedback and deep learning forecasts to deliver precise irrigation recommendations. These forecasts include soil moisture predictions based on environmental parameters, enhancing water efficiency and crop health. The framework also supports energy-aware data transmission and selective model updates to optimize local resources.
+        </p>
+
+        <p>
+            The PNR Project is extended to operate in multi-farm environments by introducing a federated learning framework that enables collaborative model training across distributed farms without sharing raw data. This approach preserves data privacy while improving model generalization to diverse agro-climatic conditions. To further ensure security, traceability, and trust in the collaborative learning process, blockchain technology is integrated to log local model updates and secure irrigation events in a tamper-resistant ledger.
+        </p>
+
+       
+        <p>
+            The project adopts a co-design methodology involving agronomists, local farmers, and ICT experts. A Stakeholders & Experts Advisory Committee (SEAC) and a 30-month field piloting program guide system refinement through iterative feedback. Emphasis is placed on usability, resilience, and socio-economic relevance.
+        </p>      
+
+         <figure>
+            <img src="images/Article2/bc.png" alt="Adapted Blockchain for Smart Irrigation Systems" itemprop="image">
+            <figcaption> Adapted Blockchain for Smart Irrigation Systems </figcaption>
+        </figure>
+
+        <p>
+            As a core team member, I actively contributed to the deployment of PNR Project kits in the Oran region, performed on-site hardware assembly and testing, and co-led the development of deep learning models for soil parameter forecasting. I also participated in the integration of federated learning across multiple farms, and contributed to the implementation of blockchain mechanisms to enhance data integrity and trust within the system. Furthermore, I helped optimize energy-efficient sensor-gateway interactions and integrate predictive intelligence into the DSS framework.
+        </p>
+         <figure>
+            <img src="images/Article2/archfl.png" alt="Federated Learning-Driven Architecture for Intelligent Irrigation Management" itemprop="image">
+            <figcaption> Federated Learning-Driven Architecture for Intelligent Irrigation Management </figcaption>
+        </figure>
+
+        <p>
+            In summary, the PNR Project stands as a scalable, intelligent, and accessible solution for sustainable irrigation. Its fusion of IoT, embedded AI, federated learning, and blockchain empowers smallholders with tailored technology while promoting collaborative, privacy-preserving, and secure agricultural innovation in resource-constrained settings.
+        </p>
+    </section>
+</article>
+
+
+
+    
+
+   <!--contact section-->
+        <section class="contact" id="contact">
+            <h2 class="heading">Contact <span>Me!</span></h2>
+
+        <form id="contact-form">
+    <div class="input-box">
+        <input type="text" name="from_name" placeholder="Full Name" required>
+        <input type="email" name="from_email" placeholder="Email Address" required>
+    </div>
+
+    <div class="input-box">
+        <input type="number" name="mobile" placeholder="Mobile Number">
+        <input type="text" name="subject" placeholder="Email Subject">
+    </div>
+
+    <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+    <input type="submit" value="Send Message" class="btn">
+</form>
+
+        </section>
+
+        <!--footer section-->
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2025 by Rabaie Benameur | All right reserved!</p>
+            </div>
+
+            <div class="footer-iconTop">
+                <a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+            </div>
+        </footer>
+
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_bitlgkj', 'template_d3psrww', this)
+      .then(function(response) {
+        alert("Message sent successfully!");
+      }, function(error) {
+        alert("Failed to send message. Please try again.");
+        console.log(error);
+      });
+  });
+</script>
+
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- custom js-->
+    <script src="scripts.js"></script>
+    
+</body>
+</html>

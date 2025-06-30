@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Rabaie Benameur</title>
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="style.css">
+
+    <!--box icon-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+	
+	
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('BPS3zjorGVvRtfCsW'); // Replace with your EmailJS public key
+</script>
+
+
+</head>
+<body>
+
+    <!--header design-->
+    <header class="header">
+        <a href="#" class="logo">Rabaie Benameur.</a>
+
+        <nav class="navbar">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+    </header> 
+   
+
+
+        <!--home section-->
+    <section class="home" id="home">
+
+        <div class="home-content">
+            <h3>Hello, I am</h3>
+            <h1>Rabaie Benameur</h1>
+            <p>I hold a Ph.D. in Cyber Security Systems and Networks, with research focused on machine learning, deep learning, and federated learning. I have published in peer-reviewed journals and major conferences, contributing to the intersection of cybersecurity and AI, and establishing myself as a researcher in secure and intelligent systems.</p>
+
+            <div class="social-media">
+                <a href="https://www.linkedin.com/in/your-profile" target="_blank"><i class='bx bxl-linkedin'></i></a>
+                <a href="https://github.com/your-username" target="_blank"><i class='bx bxl-github'></i></a>
+                <a href="https://www.udemy.com/user/your-profile" target="_blank"><i class='bx bxs-graduation'></i></a>
+                <a href="https://www.researchgate.net/profile/your-profile" target="_blank"><i class='bx bxs-user-detail'></i></a>
+                <a href="https://scholar.google.com/citations?user=your-scholar-id" target="_blank"><i class='bx bxs-book-alt'></i></a>
+            </div>
+            
+            
+
+            <a href="#" class="btn">Download CV</a>
+        </div>
+
+        <div class="profession-container">
+            <div class="profession-box">
+        
+                <div class="profession" style="--i:0;">
+                    <!-- AI / Data / Science -->
+                    <i class='bx bxs-brain'></i>
+                    <h3>Applied AI Scientist</h3>
+                </div>
+        
+                <div class="profession" style="--i:1;">
+                    <!-- IoT / Devices / Sensors -->
+                    <i class='bx bxs-chip'></i>
+                    <h3>IoT Developer</h3>
+                </div>
+        
+                <div class="profession" style="--i:2;">
+                    <!-- Blockchain / Security -->
+                    <i class='bx bxs-lock-alt'></i>
+                    <h3>Blockchain Architect</h3>
+                </div>
+        
+                <div class="profession" style="--i:3;">
+                    <!-- Full-Stack / Web Dev -->
+                    <i class='bx bx-code-alt'></i>
+                    <h3>Full-Stack Developer</h3>
+                </div>
+        
+                <div class="circle"></div>
+            </div>
+        
+            <div class="overlay"></div>
+        </div>
+        
+
+        <div class="home-img">
+            <img src="images/dragonpng.png" alt=""> 
+        </div>
+
+    </section>
+
+
+    <!--portfolio section-->
+<!-- Complete Article Section -->
+<article class="article" id="article" style="margin-top: 100px;" itemscope itemtype="https://schema.org/ScholarlyArticle">
+    <header class="article-header">
+        <h2 class="heading"><span itemprop="name">Project 1</span></h2>
+        <h3 class="article-title" itemprop="headline">Federated Learning for IoT Intrusion Detection</h3>
+        <p class="article-meta">
+            <span itemprop="about">Type: Research Project</span><br>
+            <time datetime="2025-06-01" itemprop="datePublished">Publication Date: June 2025</time>
+        </p>
+    </header>
+
+    <section class="article-body" itemprop="articleBody">
+        <p>
+            This project explores the integration of <strong>Federated Learning</strong> and <strong>Continual Learning</strong> for enhancing Intrusion Detection Systems (IDS) in <strong>Internet of Things (IoT)</strong> environments. The goal is to improve detection accuracy and adaptability without compromising user privacy.
+        </p>
+
+        <figure>
+            <img src="images/p1.png" alt="Illustration of federated learning for IoT security" itemprop="image">
+            <figcaption>Federated learning framework in a distributed IoT network</figcaption>
+        </figure>
+
+        <p>
+            Our methodology involves the use of client-side updates and aggregation techniques that ensure differential privacy. Continual learning strategies such as Elastic Weight Consolidation (EWC) and Learning without Forgetting (LwF) are embedded into the client training loop to mitigate catastrophic forgetting.
+        </p>
+
+        <figure>
+            <img src="images/p2.png" alt="Federated training architecture diagram" itemprop="image">
+            <figcaption>Federated training with privacy-preserving updates</figcaption>
+        </figure>
+
+        <p>
+            Evaluation was conducted on benchmark IoT datasets under varying attack scenarios. The results show significant improvements in both precision and recall, with up to 94.3% detection accuracy. The federated design also enables scalability to hundreds of distributed nodes.
+        </p>
+
+        <figure>
+            <img src="images/p3.png" alt="Performance metrics chart showing detection rates" itemprop="image">
+            <figcaption>Detection performance metrics across IoT threats</figcaption>
+        </figure>
+
+        <p>
+            In conclusion, the framework offers a privacy-preserving, adaptive, and efficient solution for modern intrusion detection in IoT networks. Future work will explore integration with homomorphic encryption and model compression techniques for low-resource devices.
+        </p>
+    </section>
+</article>
+
+    
+
+   <!--contact section-->
+        <section class="contact" id="contact">
+            <h2 class="heading">Contact <span>Me!</span></h2>
+
+        <form id="contact-form">
+    <div class="input-box">
+        <input type="text" name="from_name" placeholder="Full Name" required>
+        <input type="email" name="from_email" placeholder="Email Address" required>
+    </div>
+
+    <div class="input-box">
+        <input type="number" name="mobile" placeholder="Mobile Number">
+        <input type="text" name="subject" placeholder="Email Subject">
+    </div>
+
+    <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+    <input type="submit" value="Send Message" class="btn">
+</form>
+
+        </section>
+
+        <!--footer section-->
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2025 by Rabaie Benameur | All right reserved!</p>
+            </div>
+
+            <div class="footer-iconTop">
+                <a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+            </div>
+        </footer>
+
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_bitlgkj', 'template_d3psrww', this)
+      .then(function(response) {
+        alert("Message sent successfully!");
+      }, function(error) {
+        alert("Failed to send message. Please try again.");
+        console.log(error);
+      });
+  });
+</script>
+
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- custom js-->
+    <script src="scripts.js"></script>
+    
+</body>
+</html>

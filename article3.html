@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Rabaie Benameur</title>
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="style.css">
+
+    <!--box icon-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+	
+	
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('BPS3zjorGVvRtfCsW'); // Replace with your EmailJS public key
+</script>
+
+
+</head>
+<body>
+
+    <!--header design-->
+    <header class="header">
+        <a href="#" class="logo">Rabaie Benameur.</a>
+
+        <nav class="navbar">
+            <a href="index.html#home" class="active">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#services">Services</a>
+            <a href="index.html#portfolio">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+    </header> 
+   
+
+
+        <!--home section-->
+    <section class="home" id="home">
+
+        <div class="home-content">
+            <h3>Hello, I am</h3>
+            <h1>Rabaie Benameur</h1>
+            <p>I hold a Ph.D. in Cyber Security Systems and Networks, with research focused on machine learning, deep learning, and federated learning. I have published in peer-reviewed journals and major conferences, contributing to the intersection of cybersecurity and AI, and establishing myself as a researcher in secure and intelligent systems.</p>
+  <div class="social-media">
+                <a href="https://linkedin.com/in/rabaie-benameur-79b257201" target="_blank"><i class='bx bxl-linkedin'></i></a>
+                <a href="https://github.com/benameurrabaie" target="_blank"><i class='bx bxl-github'></i></a>
+                <a href="https://www.udemy.com/user/rabaie-benameur/" target="_blank"><i class='bx bxs-graduation'></i></a>
+                <a href="https://www.researchgate.net/profile/Rabaie-Benameur" target="_blank"><i class='bx bxs-user-detail'></i></a>
+                <a href="https://scholar.google.com/citations?user=reAf4ckAAAAJ&hl" target="_blank"><i class='bx bxs-book-alt'></i></a>
+            </div>
+            
+            
+
+            <a href="https://github.com/benameurrabaie/portfolio/blob/c0e6df6d70d5d651fa67f78bbb4de803b2b09df9/cv.pdf" class="btn">Download CV</a>
+       
+        </div>
+
+        <div class="profession-container">
+            <div class="profession-box">
+        
+                <div class="profession" style="--i:0;">
+                    <!-- AI / Data / Science -->
+                    <i class='bx bxs-brain'></i>
+                    <h3>Applied AI Scientist</h3>
+                </div>
+        
+                <div class="profession" style="--i:1;">
+                    <!-- IoT / Devices / Sensors -->
+                    <i class='bx bxs-chip'></i>
+                    <h3>IoT Developer</h3>
+                </div>
+        
+                <div class="profession" style="--i:2;">
+                    <!-- Blockchain / Security -->
+                    <i class='bx bxs-lock-alt'></i>
+                    <h3>Blockchain Architect</h3>
+                </div>
+        
+                <div class="profession" style="--i:3;">
+                    <!-- Full-Stack / Web Dev -->
+                    <i class='bx bx-code-alt'></i>
+                    <h3>Full-Stack Developer</h3>
+                </div>
+        
+                <div class="circle"></div>
+            </div>
+        
+            <div class="overlay"></div>
+        </div>
+        
+
+        <div class="home-img">
+            <img src="images/dragonpng.png" alt=""> 
+        </div>
+
+    </section>
+
+
+    <!--portfolio section-->
+<!-- Complete Article Section -->
+<article class="article" id="article" style="margin-top: 100px;" itemscope itemtype="https://schema.org/ScholarlyArticle">
+  <header class="article-header">
+    <h2 class="heading"><span itemprop="name">Project 3</span></h2>
+    <h3 class="article-title" itemprop="headline">Autonomous Trading Agents in Cryptocurrency Markets Using Deep Reinforcement Learning</h3>
+    <p class="article-meta">
+      <span itemprop="about">Type: Autonomous Trading Agents,Deep Reinforcement Learning, Cryptocurrency, AI</span><br>
+      <time datetime="2025-06-01" itemprop="datePublished">Publication Date: June 2025</time>
+    </p>
+  </header>
+
+  <section class="article-body" itemprop="articleBody">
+    <p>
+      This project explores the design and evaluation of autonomous trading agents in cryptocurrency markets using Deep Reinforcement Learning (DRL). The study compares three prominent algorithms—Proximal Policy Optimization (PPO), Advantage Actor-Critic (A2C), and Double Deep Q-Network (DDQN)—within a simulated Bitcoin trading environment.
+    </p>
+
+    <figure>
+      <img src="images/article3/arch.png" alt="DRL trading agent architecture" itemprop="image">
+      <figcaption>Sequential Workflow of the Proposed DRL-Based Trading Agent in Crypto Markets.</figcaption>
+    </figure>
+
+    <p>
+      A Markov Decision Process (MDP) framework was employed to formalize the trading problem, integrating state observations from market indicators, trading actions (Buy, Sell, Hold), and reward signals based on portfolio performance. The system is trained on hourly BTC/USD historical data, preprocessed with engineered features like normalized volumes and price changes.
+    </p>
+
+    <p>
+      Each DRL agent adopts a distinct architecture: PPO and A2C utilize actor-critic networks with separate policy and value functions, while DDQN applies a dual-network Q-learning approach. PPO models feature clipped objective functions for stable updates; A2C leverages advantage estimates; and DDQN mitigates overestimation with target networks.
+    </p>
+
+    <figure>
+      <img src="images/article3/train.png" alt="Training performance plots" itemprop="image">
+      <figcaption>Performance Comparative Analysis of PPO, A2C, and DDQN During Training Across Learning Rates.</figcaption>
+    </figure>
+
+    <p>
+      Experimental results indicate PPO provides the most stable and profitable performance, with a portfolio return of 1373.27%, followed by DDQN (815.38%) and A2C (722.63%). DDQN achieves the fastest convergence in just 35 episodes, while A2C suffers from high variance and lower reward consistency. PPO also achieves the highest average reward and success rate under tested conditions.
+    </p>
+
+    <p>
+      The evaluation includes key performance metrics: average reward, maximum reward, reward standard deviation, steps to convergence, and success rate. PPO shows robustness across different learning rates, while A2C requires fine-tuning to overcome instability. DDQN performs well but is sensitive to hyperparameters.
+    </p>
+
+    <figure>
+      <img src="images/article3/traiding.png" alt="Trading agent behavior visualization" itemprop="image">
+      <figcaption>Trading Actions Over Time: Comparison of PPO, A2C, and DDQN Agents on Declining BTC Price Data.</figcaption>
+    </figure>
+
+    <p>
+      As a core contributor, I led the design of the PPO-based agent, implemented environment interaction policies, and conducted extensive experiments using PyTorch on Google Colab. I analyzed training curves, portfolio performance, and model robustness, contributing significantly to comparative benchmarking and result interpretation.
+    </p>
+
+
+
+    <p>
+      In summary, this project demonstrates that DRL offers a powerful approach to developing intelligent, adaptive, and profitable trading agents for volatile markets like cryptocurrency. Future extensions will include federated learning for decentralized agent collaboration, and enhanced modeling of risk and sentiment to further refine trading decisions.
+    </p>
+  </section>
+</article>
+
+
+
+    
+
+   <!--contact section-->
+        <section class="contact" id="contact">
+            <h2 class="heading">Contact <span>Me!</span></h2>
+
+        <form id="contact-form">
+    <div class="input-box">
+        <input type="text" name="from_name" placeholder="Full Name" required>
+        <input type="email" name="from_email" placeholder="Email Address" required>
+    </div>
+
+    <div class="input-box">
+        <input type="number" name="mobile" placeholder="Mobile Number">
+        <input type="text" name="subject" placeholder="Email Subject">
+    </div>
+
+    <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+    <input type="submit" value="Send Message" class="btn">
+</form>
+
+        </section>
+
+        <!--footer section-->
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2025 by Rabaie Benameur | All right reserved!</p>
+            </div>
+
+            <div class="footer-iconTop">
+                <a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+            </div>
+        </footer>
+
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_bitlgkj', 'template_d3psrww', this)
+      .then(function(response) {
+        alert("Message sent successfully!");
+      }, function(error) {
+        alert("Failed to send message. Please try again.");
+        console.log(error);
+      });
+  });
+</script>
+
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- custom js-->
+    <script src="scripts.js"></script>
+    
+</body>
+</html>

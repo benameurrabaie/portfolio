@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Rabaie Benameur</title>
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="style.css">
+
+    <!--box icon-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+	
+	
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('BPS3zjorGVvRtfCsW'); // Replace with your EmailJS public key
+</script>
+
+
+</head>
+<body>
+
+    <!--header design-->
+    <header class="header">
+        <a href="#" class="logo">Rabaie Benameur.</a>
+
+        <nav class="navbar">
+            <a href="index.html#home" class="active">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#services">Services</a>
+            <a href="index.html#portfolio">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+    </header> 
+   
+
+
+        <!--home section-->
+    <section class="home" id="home">
+
+        <div class="home-content">
+            <h3>Hello, I am</h3>
+            <h1>Rabaie Benameur</h1>
+            <p>I hold a Ph.D. in Cyber Security Systems and Networks, with research focused on machine learning, deep learning, and federated learning. I have published in peer-reviewed journals and major conferences, contributing to the intersection of cybersecurity and AI, and establishing myself as a researcher in secure and intelligent systems.</p>
+
+            <div class="social-media">
+                <a href="https://linkedin.com/in/rabaie-benameur-79b257201" target="_blank"><i class='bx bxl-linkedin'></i></a>
+                <a href="https://github.com/benameurrabaie" target="_blank"><i class='bx bxl-github'></i></a>
+                <a href="https://www.udemy.com/user/rabaie-benameur/" target="_blank"><i class='bx bxs-graduation'></i></a>
+                <a href="https://www.researchgate.net/profile/Rabaie-Benameur" target="_blank"><i class='bx bxs-user-detail'></i></a>
+                <a href="https://scholar.google.com/citations?user=reAf4ckAAAAJ&hl" target="_blank"><i class='bx bxs-book-alt'></i></a>
+            </div>
+            
+            
+
+            <a href="https://github.com/benameurrabaie/portfolio/blob/c0e6df6d70d5d651fa67f78bbb4de803b2b09df9/cv.pdf" class="btn">Download CV</a>
+        </div>
+
+        <div class="profession-container">
+            <div class="profession-box">
+        
+                <div class="profession" style="--i:0;">
+                    <!-- AI / Data / Science -->
+                    <i class='bx bxs-brain'></i>
+                    <h3>Applied AI Scientist</h3>
+                </div>
+        
+                <div class="profession" style="--i:1;">
+                    <!-- IoT / Devices / Sensors -->
+                    <i class='bx bxs-chip'></i>
+                    <h3>IoT Developer</h3>
+                </div>
+        
+                <div class="profession" style="--i:2;">
+                    <!-- Blockchain / Security -->
+                    <i class='bx bxs-lock-alt'></i>
+                    <h3>Blockchain Architect</h3>
+                </div>
+        
+                <div class="profession" style="--i:3;">
+                    <!-- Full-Stack / Web Dev -->
+                    <i class='bx bx-code-alt'></i>
+                    <h3>Full-Stack Developer</h3>
+                </div>
+        
+                <div class="circle"></div>
+            </div>
+        
+            <div class="overlay"></div>
+        </div>
+        
+
+        <div class="home-img">
+            <img src="images/dragonpng.png" alt=""> 
+        </div>
+
+    </section>
+
+
+    <!--portfolio section-->
+<!-- Complete Article Section -->
+<article class="article" id="article" style="margin-top: 100px;" itemscope itemtype="https://schema.org/ScholarlyArticle">
+  <header class="article-header">
+    <h2 class="heading"><span itemprop="name">Project 5</span></h2>
+    <h3 class="article-title" itemprop="headline">FCL-IWQMS: Federated Continual Learning for Adaptive Real-Time Water Quality Monitoring</h3>
+    <p class="article-meta">
+      <span itemprop="about">Type: IoT, AI, Federated Learning, Continual Learning, Water Quality, Environmental AI</span><br>
+      <time datetime="2025-06-01" itemprop="datePublished">Publication Date: June 2025</time>
+    </p>
+  </header>
+
+  <section class="article-body" itemprop="articleBody">
+    <p>
+      The FCL-IWQMS project presents a robust framework for adaptive, real-time surface water quality monitoring. It combines IoT sensor technologies with Federated Continual Learning (FCL) to predict key water quality indicators such as dissolved oxygen, pH, turbidity, conductivity, and temperature while preserving data privacy and enabling decentralized intelligence.
+    </p>
+
+    <figure>
+      <img src="images/Article5/arch.png" alt="FCL-IWQMS system architecture" itemprop="image">
+      <figcaption>System Overview of the Proposed FCL-IWQMS Architecture for Surface Water Quality Monitoring.</figcaption>
+    </figure>
+
+    <p>
+      The hardware platform is based on a compact, solar-powered IoT system integrating low-cost sensors (pH, DO, EC, turbidity, and temperature) with a Raspberry Pi LoRa gateway. The node transmits data hourly using LoRaWAN and operates autonomously for over two years in off-grid river environments.
+    </p>
+    <figure>
+      <img src="images/Article5/hardward.png" alt="Hardware Components of the Generic IoT Platform Architecture" itemprop="image">
+      <figcaption>Hardware Components of the Generic IoT Platform Architecture.</figcaption>
+    </figure>
+    <p>
+      On the software side, the system leverages continual learning techniques—PER (Prioritized Experience Replay), LWF (Learning Without Forgetting), and EWC (Elastic Weight Consolidation)—to adapt local models to new data while retaining past knowledge. These are combined with federated learning strategies—FedAvg, FedTM (Trimmed Mean), and AMU (Agnostic Model Update)—to aggregate updates across distributed clients securely.
+    </p>
+
+    <p>
+      The learning architecture combines 1D CNNs, BiLSTM layers, and an attention mechanism to extract spatial-temporal patterns from water quality streams. It uses MSE loss and the Adam optimizer with dropout and batch normalization to enhance generalization and reduce overfitting.
+    </p>
+
+    <figure>
+      <img src="images/article5/model.png" alt="An Enhanced Attention-Based 1D CNN-BiLSTM Model for Accurate Water Quality Prediction" itemprop="image">
+      <figcaption>An Enhanced Attention-Based 1D CNN-BiLSTM Model for Accurate Water Quality Prediction.</figcaption>
+    </figure>
+
+    <p>
+      Experiments conducted on a public dataset from Nova Scotia’s Automated Water Quality Monitoring Network validate the system's performance across five river stations with 8 federated clients. The results show FedAvg-PER achieving best results for DO (MAE: 0.0536, R²: 0.908), while AMU-LWF excelled in pH prediction (MAE: 0.0397, R²: 0.7341). FedTM-LWF led water temperature and turbidity predictions, and FedTM-PER showed strong performance on conductivity.
+    </p>
+
+    <p>
+      As an integral member of the project, I contributed to the co-design and deployment of the IoT sensor kits, implemented the attention-enhanced CNN-BiLSTM architecture, and conducted experiments in Google Colab using PyTorch. I also analyzed model convergence trends and comparative performance across FL/CL configurations.
+    </p>
+
+    <p>
+      In summary, FCL-IWQMS offers a scalable, privacy-preserving, and efficient framework for intelligent water quality monitoring. Future work will include real-world validation of the platform in the Marne River (France), dynamic client participation, and the deployment of energy-aware adaptive learning mechanisms in natural ecosystems.
+    </p>
+  </section>
+</article>
+
+
+
+
+    
+
+   <!--contact section-->
+        <section class="contact" id="contact">
+            <h2 class="heading">Contact <span>Me!</span></h2>
+
+        <form id="contact-form">
+    <div class="input-box">
+        <input type="text" name="from_name" placeholder="Full Name" required>
+        <input type="email" name="from_email" placeholder="Email Address" required>
+    </div>
+
+    <div class="input-box">
+        <input type="number" name="mobile" placeholder="Mobile Number">
+        <input type="text" name="subject" placeholder="Email Subject">
+    </div>
+
+    <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+    <input type="submit" value="Send Message" class="btn">
+</form>
+
+        </section>
+
+        <!--footer section-->
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2025 by Rabaie Benameur | All right reserved!</p>
+            </div>
+
+            <div class="footer-iconTop">
+                <a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+            </div>
+        </footer>
+
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_bitlgkj', 'template_d3psrww', this)
+      .then(function(response) {
+        alert("Message sent successfully!");
+      }, function(error) {
+        alert("Failed to send message. Please try again.");
+        console.log(error);
+      });
+  });
+</script>
+
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- custom js-->
+    <script src="scripts.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Rabaie Benameur</title>
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="style.css">
+
+    <!--box icon-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+	
+	
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init('BPS3zjorGVvRtfCsW'); // Replace with your EmailJS public key
+</script>
+
+
+</head>
+<body>
+
+    <!--header design-->
+    <header class="header">
+        <a href="#" class="logo">Rabaie Benameur.</a>
+
+        <nav class="navbar">
+            <a href="index.html#home" class="active">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#services">Services</a>
+            <a href="index.html#portfolio">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="bx bx-moon" id="darkMode-icon"></div>
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+    </header> 
+   
+
+
+        <!--home section-->
+    <section class="home" id="home">
+
+        <div class="home-content">
+            <h3>Hello, I am</h3>
+            <h1>Rabaie Benameur</h1>
+            <p>I hold a Ph.D. in Cyber Security Systems and Networks, with research focused on machine learning, deep learning, and federated learning. I have published in peer-reviewed journals and major conferences, contributing to the intersection of cybersecurity and AI, and establishing myself as a researcher in secure and intelligent systems.</p>
+
+            <div class="social-media">
+                <a href="https://linkedin.com/in/rabaie-benameur-79b257201" target="_blank"><i class='bx bxl-linkedin'></i></a>
+                <a href="https://github.com/benameurrabaie" target="_blank"><i class='bx bxl-github'></i></a>
+                <a href="https://www.udemy.com/user/rabaie-benameur/" target="_blank"><i class='bx bxs-graduation'></i></a>
+                <a href="https://www.researchgate.net/profile/Rabaie-Benameur" target="_blank"><i class='bx bxs-user-detail'></i></a>
+                <a href="https://scholar.google.com/citations?user=reAf4ckAAAAJ&hl" target="_blank"><i class='bx bxs-book-alt'></i></a>
+            </div>
+            
+            
+
+            <a href="https://github.com/benameurrabaie/portfolio/blob/c0e6df6d70d5d651fa67f78bbb4de803b2b09df9/cv.pdf" class="btn">Download CV</a>
+       
+        </div>
+
+        <div class="profession-container">
+            <div class="profession-box">
+        
+                <div class="profession" style="--i:0;">
+                    <!-- AI / Data / Science -->
+                    <i class='bx bxs-brain'></i>
+                    <h3>Applied AI Scientist</h3>
+                </div>
+        
+                <div class="profession" style="--i:1;">
+                    <!-- IoT / Devices / Sensors -->
+                    <i class='bx bxs-chip'></i>
+                    <h3>IoT Developer</h3>
+                </div>
+        
+                <div class="profession" style="--i:2;">
+                    <!-- Blockchain / Security -->
+                    <i class='bx bxs-lock-alt'></i>
+                    <h3>Blockchain Architect</h3>
+                </div>
+        
+                <div class="profession" style="--i:3;">
+                    <!-- Full-Stack / Web Dev -->
+                    <i class='bx bx-code-alt'></i>
+                    <h3>Full-Stack Developer</h3>
+                </div>
+        
+                <div class="circle"></div>
+            </div>
+        
+            <div class="overlay"></div>
+        </div>
+        
+
+        <div class="home-img">
+            <img src="images/dragonpng.png" alt=""> 
+        </div>
+
+    </section>
+
+
+    <!--portfolio section-->
+<!-- Complete Article Section -->
+<article class="article" id="article" style="margin-top: 100px;" itemscope itemtype="https://schema.org/ScholarlyArticle">
+  <header class="article-header">
+    <h2 class="heading"><span itemprop="name">Project 4</span></h2>
+    <h3 class="article-title" itemprop="headline">Federated Continual Learning for Adaptive DDoS Detection in Heterogeneous IoT Environments</h3>
+    <p class="article-meta">
+      <span itemprop="about">Type: AI, Federated Learning, Continual Learning, Network Security, IoT</span><br>
+      <time datetime="2025-06-01" itemprop="datePublished">Publication Date: June 2025</time>
+    </p>
+  </header>
+
+  <section class="article-body" itemprop="articleBody">
+    <p>
+      This project introduces a Federated Continual Learning (FCL) framework aimed at enhancing the detection of Distributed Denial-of-Service (DDoS) attacks in heterogeneous Internet of Things (IoT) environments. The framework tackles key challenges such as data privacy, non-IID data distribution, and the evolving nature of cyber threats by combining continual learning with federated training strategies.
+    </p>
+
+    <figure>
+      <img src="images/Article4/arch.png" alt="FCL Architecture for IoT DDoS Detection" itemprop="image">
+      <figcaption>Architecture Overview of the Proposed FCL Framework for DDoS Detection in IoT Environments.</figcaption>
+    </figure>
+
+    <p>
+      The proposed approach utilizes advanced continual learning techniques—Prioritized Experience Replay (PER), Learning Without Forgetting (LWF), and Elastic Weight Consolidation (EWC)—to mitigate catastrophic forgetting. These techniques enable models deployed on IoT gateways to retain past knowledge while adapting to new threats using minimal memory and computational overhead.
+    </p>
+
+  
+    <p>
+      Federated learning strategies—FedAvg, FedProx, AMU, and CFL—are integrated to enable secure and decentralized model updates from multiple clients. Experiments conducted with 16, 32, and 64 active clients using the CIC-IoT2023 dataset demonstrated that FedProx and FedAvg consistently outperformed other methods in terms of accuracy, precision, and recall, especially when combined with LWF and EWC.
+    </p>
+
+    <p>
+      The deep learning model architecture is inspired by ResNet and tailored for one-dimensional network stream classification. It features residual blocks, batch normalization, dropout layers, and three fully connected layers, ultimately classifying network traffic into 32 distinct classes.
+    </p>
+
+    <figure>
+      <img src="images/Article4/training.png" alt="Model Accuracy over Time" itemprop="image">
+      <figcaption>Performance Comparative Analysis of FCL Techniques During Training Across Different Client Configurations.</figcaption>
+    </figure>
+
+    <p>
+      As a key contributor, I was involved in designing and implementing the FCL framework, conducting extensive experimentation, and analyzing the performance of different continual and federated learning strategies. I also optimized training pipelines on PyTorch, processed real-world IoT DDoS data, and applied CL-based mitigation to reduce retraining overhead.
+    </p>
+
+
+
+    <p>
+      In conclusion, this project delivers a scalable and adaptive intrusion detection solution by combining edge-based continual learning and federated optimization. Future work will explore dynamic client participation, energy-efficient client coordination, and incremental learning of novel attack types without retraining from scratch.
+    </p>
+  </section>
+</article>
+
+
+
+
+    
+
+   <!--contact section-->
+        <section class="contact" id="contact">
+            <h2 class="heading">Contact <span>Me!</span></h2>
+
+        <form id="contact-form">
+    <div class="input-box">
+        <input type="text" name="from_name" placeholder="Full Name" required>
+        <input type="email" name="from_email" placeholder="Email Address" required>
+    </div>
+
+    <div class="input-box">
+        <input type="number" name="mobile" placeholder="Mobile Number">
+        <input type="text" name="subject" placeholder="Email Subject">
+    </div>
+
+    <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+    <input type="submit" value="Send Message" class="btn">
+</form>
+
+        </section>
+
+        <!--footer section-->
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2025 by Rabaie Benameur | All right reserved!</p>
+            </div>
+
+            <div class="footer-iconTop">
+                <a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+            </div>
+        </footer>
+
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_bitlgkj', 'template_d3psrww', this)
+      .then(function(response) {
+        alert("Message sent successfully!");
+      }, function(error) {
+        alert("Failed to send message. Please try again.");
+        console.log(error);
+      });
+  });
+</script>
+
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- custom js-->
+    <script src="scripts.js"></script>
+    
+</body>
+</html>
