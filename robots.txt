@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://benameurrabaie.github.io/portfolio/sitemap.xml
+
+# Optional: Block indexing of non-content files (edit/remove as needed)
+Disallow: /style.css
+Disallow: /scripts.js
+Disallow: /README.md
+
+# Optional: Allow Googlebot access to JavaScript, CSS, and images
+User-agent: Googlebot
+Allow: .js
+Allow: .css
+Allow: .png
+Allow: .jpg
+Allow: .jpeg
+Allow: .gif
