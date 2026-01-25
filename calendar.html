@@ -4,114 +4,177 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calendrier des Réunions - Initialisation à la Programmation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
-    /* Base */
+    /* Animated gradient background */
     body {
-      font-family: 'Roboto', sans-serif;
-      background: #f2f5f7;
-      color: #1a1a1a;
       margin: 0;
-      padding: 40px 20px;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff6a00, #ffb347);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
     }
 
     .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 15px;
-      padding: 40px 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      max-width: 850px;
+      margin: 50px auto;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      animation: fadeIn 2s ease forwards;
     }
 
-    h1 {
+    @keyframes fadeIn {
+      0% {opacity: 0; transform: translateY(20px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+
+    header {
       text-align: center;
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+    header h1 {
+      font-family: 'Montserrat', sans-serif;
       font-size: 2rem;
-      color: #003366;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+      animation: textFade 2s ease forwards;
+    }
+
+    @keyframes textFade {
+      0% {opacity: 0; transform: translateY(-20px);}
+      100% {opacity: 1; transform: translateY(0);}
     }
 
     .info {
-      text-align: center;
-      margin-bottom: 40px;
+      margin-top: 15px;
+      font-size: 1rem;
       line-height: 1.6;
-      color: #003366;
-    }
-
-    .info h2 {
-      margin-bottom: 10px;
-      font-size: 1.5rem;
+      color: #f0f0f0;
+      animation: textFade 2.5s ease forwards;
     }
 
     table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 12px;
+      border-spacing: 0 15px;
+      margin-top: 30px;
+      animation: fadeIn 3s ease forwards;
     }
 
-    th, td {
-      padding: 12px 15px;
+    th {
+      background: rgba(255,255,255,0.2);
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    td {
+      background: rgba(255,255,255,0.1);
+      padding: 12px;
+      border-radius: 12px;
       text-align: center;
-    }
-
-    thead {
-      background-color: #003366;
-      color: #ffffff;
-      border-radius: 10px;
-    }
-
-    tbody tr {
-      background: #f9f9f9;
       transition: transform 0.3s, box-shadow 0.3s;
-      border-radius: 10px;
+      opacity: 0;
+      animation: rowFade 1s forwards;
     }
 
-    tbody tr:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    tbody tr:hover td {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
 
-    td a.button {
+    td:nth-child(1) {animation-delay: 0.3s;}
+    td:nth-child(2) {animation-delay: 0.5s;}
+    td:nth-child(3) {animation-delay: 0.7s;}
+    td:nth-child(4) {animation-delay: 0.9s;}
+
+    @keyframes rowFade {
+      0% {opacity: 0; transform: translateY(20px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+
+    a.button {
       display: inline-block;
       padding: 8px 20px;
-      background: #003366;
-      color: #ffffff;
-      border-radius: 25px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: #fff;
       font-weight: bold;
+      border-radius: 25px;
       text-decoration: none;
-      transition: background 0.3s;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     }
 
-    td a.button:hover {
-      background: #0059b3;
+    a.button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
     }
 
-    td a.disabled {
-      background: #cccccc;
-      color: #666666;
+    a.disabled {
+      background: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.6);
       pointer-events: none;
       cursor: default;
+    }
+
+    .active-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      background: #ffcc00;
+      color: #003366;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-left: 5px;
+      animation: badgePulse 2s infinite;
+    }
+
+    @keyframes badgePulse {
+      0% {transform: scale(1);}
+      50% {transform: scale(1.1);}
+      100% {transform: scale(1);}
     }
 
     .footer {
       text-align: center;
       margin-top: 30px;
       font-size: 0.9rem;
-      color: #555555;
+      color: rgba(255,255,255,0.7);
+      animation: fadeIn 4s ease forwards;
+    }
+
+    @media (max-width: 600px) {
+      .container {padding: 20px;}
+      th, td {font-size: 0.9rem;}
     }
 
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Calendrier des Réunions en Ligne</h1>
-
-    <div class="info">
-      <h2>Module : Initialisation à la Programmation</h2>
-      <p>Enseignant : Dr BENAMEUR RABAIE</p>
-      <p>Université : Oran 1 Ahmed Ben Bella</p>
-      <p>Institut : ISTA</p>
-    </div>
+    <header>
+      <h1>Calendrier des Réunions en Ligne</h1>
+      <div class="info">
+        <p>Module : Initialisation à la Programmation</p>
+        <p>Enseignant : Dr BENAMEUR RABAIE</p>
+        <p>Université : Oran 1 Ahmed Ben Bella</p>
+        <p>Institut : ISTA</p>
+      </div>
+    </header>
 
     <table>
       <thead>
@@ -136,7 +199,7 @@
           <td><a href="#" class="disabled">Non disponible</a></td>
         </tr>
         <tr>
-          <td>08/02/2026</td>
+          <td>08/02/2026 <span class="active-badge">Semaine active</span></td>
           <td>Dimanche</td>
           <td>17:00 - 19:00</td>
           <td><a href="https://example.com/meeting-link" class="button" target="_blank">Rejoindre</a></td>
@@ -163,7 +226,7 @@
     </table>
 
     <div class="footer">
-      Seule la réunion de la semaine actuelle est active. Cliquez sur "Rejoindre" pour accéder à la réunion.
+      Seule la réunion de la semaine active est accessible. Cliquez sur "Rejoindre" pour participer.
     </div>
   </div>
 </body>
