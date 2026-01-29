@@ -160,6 +160,8 @@ button.primary{ background:var(--primary); color:#fff; border:none; }
             <option value="turbidity">Turbidity</option>
             <option value="conductivity">Conductivity</option>
             <option value="pressure">Pressure</option>
+			<option value="wl">Water Level</option>
+			<option value="wf">Water Flow</option>
             <option value="ph">pH</option>
             <option value="do">Dissolved Oxygen</option>
         </select>
@@ -187,8 +189,11 @@ const statsContainer = document.getElementById("statsContainer");
 const sensorMap = {
  temperature: d => d.physical?.temperature_c,
  turbidity: d => d.physical?.turbidity_ntu,
- conductivity: d => d.physical?.conductivity_us_cm,
- pressure: d => d.physical?.pressure_pa,
+ conductivity: d => d.physical?.conductivity_ec,
+ pressure: d => d.physical?.pressure,
+ wl: d => d.physical?.water_level,
+ wf: d => d.physical?.water_flow,
+
  ph: d => d.chemical?.ph,
  do: d => d.chemical?.do_mg_l
 };
@@ -198,6 +203,8 @@ const labels = {
  turbidity:"Turbidity (NTU)",
  conductivity:"Conductivity (uS/cm)",
  pressure:"Pressure (Pa)",
+ wl:"Water Level (cm)",
+ wf:"Water Flow (L)",
  ph:"pH",
  do:"Dissolved Oxygen (mg/L)"
 };
@@ -209,6 +216,8 @@ const icons = {
  conductivity: '<i class="fas fa-bolt sensor-icon icon-conductivity"></i>',
  pressure: '<i class="fas fa-tachometer-alt sensor-icon icon-pressure"></i>',
  ph: '<i class="fas fa-flask sensor-icon icon-ph"></i>',
+ wl: '<i class="fas fa-tint sensor-icon icon-water-level"></i>',
+ wf: '<i class="fas fa-water sensor-icon icon-water-flow"></i>',
  do: '<i class="fas fa-wind sensor-icon icon-do"></i>'
 };
 
