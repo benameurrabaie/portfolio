@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Obyte Fleet — Admin Dashboard</title>
+
+<!--
+  This is a single, self-contained HTML file on purpose: no build step, no
+  bundler, no backend of its own. Open it directly (double-click, file://)
+  or host it on any static file server - it behaves identically either way,
+  because every bit of state lives in Firebase, not on a server. See
+  ../docs/ADMIN_PLATFORM_ARCHITECTURE.md for the full data-flow explanation.
+
+  No Firebase SDK, no API key, no sign-in of any kind. This page talks to
+  the Firebase Realtime Database purely over its public REST/SSE interface
+  (plain `fetch()` for reads/writes, native `EventSource` for live updates)
+  against the fixed public database URL below. That only works because the
+  database's rules are open (see firebase/database.rules.json) - anyone
+  with the URL can read and write it, which is expected for this devnet
+  tool but should never be done for anything holding real data.
+-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root, [data-theme="dark"]{
+  --bg: #0B0E17;
+  --panel: #121826;
+  --panel-2: #1A2233;
+  --panel-3: #232D42;
+  --border: #26304A;
+  --text: #EAF0FF;
+  --muted: #8993B0;
+  --accent: #FF8A4C;
+  --accent-2: #22D3C8;
+  --danger: #FF5C7A;
+  --warning: #F5B94D;
+  --success: #35D68C;
+  --radius: 12px;
+  --shadow: 0 10px 30px -14px rgba(0,0,0,0.55);
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+[data-theme="light"]{
+  --bg: #F5F7FB;
+  --panel: #FFFFFF;
+  --panel-2: #F0F3FA;
+  --panel-3: #E9ECF6;
+  --border: #E1E6F0;
+  --text: #171B2E;
+  --muted: #757F99;
+  --accent: #FF7A3D;
+  --accent-2: #0EA5A6;
+  --danger: #E1435F;
+  --warning: #C98A0E;
+  --success: #17A673;
+  --shadow: 0 1px 2px rgba(23,27,46,0.04), 0 8px 24px -12px rgba(23,27,46,0.12);
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; margin:0; }
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+a{ color: var(--accent-2); }
+button{ font-family: inherit; }
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-thumb{ background: var(--panel-3); border-radius: 6px; }
+
+/* ---------- connect screen ---------- */
+#connectScreen{
+  min-height: 100vh; display:flex; align-items:center; justify-content:center; padding: 24px;
+}
+.connect-card{
+  width: 100%; max-width: 480px; background: var(--panel); border:1px solid var(--border);
+  border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+}
+.connect-card h1{ font-family: var(--font-display); font-size:20px; margin: 0 0 6px; }
+.connect-card p.lead{ color: var(--muted); font-size: 13px; margin: 0 0 22px; line-height:1.5; }
+.connect-card label{ display:flex; flex-direction:column; gap:6px; font-size:12px; color: var(--muted); margin-bottom:14px; }
+.connect-card input{
+  background: var(--panel-2); border:1px solid var(--border); color: var(--text);
+  border-radius:8px; padding: 10px 12px; font-family: var(--font-mono); font-size:13px;
+}
+.connect-card input:focus{ outline: 2px solid var(--accent-2); outline-offset:1px; }
+.connect-hint{ font-size: 11px; color: var(--muted); margin-top: -8px; margin-bottom:14px; line-height:1.5; }
+#connectError{ color: var(--danger); font-size: 12.5px; margin-bottom:14px; min-height:1em; }
+
+/* ---------- app shell ---------- */
+#app{ display:none; }
+#app.is-ready{ display:grid; grid-template-columns: 240px 1fr; min-height:100vh; }
+
+.rail{
+  background: var(--panel); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; padding: 22px 14px; gap: 22px;
+}
+.brand{ display:flex; align-items:center; gap:10px; padding: 0 8px; }
+.brand-mark{ font-size:20px; color: var(--accent); }
+.brand-text strong{ font-family: var(--font-display); font-size:14px; letter-spacing:.04em; }
+.brand-text span{ display:block; font-size:10px; color: var(--muted); letter-spacing:.1em; }
+
+.nav{ display:flex; flex-direction:column; gap:4px; }
+.nav-item{
+  display:flex; align-items:center; gap:10px; background:none; border:none; color: var(--muted);
+  font-size:13.5px; font-weight:500; text-align:left; padding:9px 12px; border-radius: var(--radius);
+  cursor:pointer; transition: background .15s, color .15s;
+}
+.nav-item:hover{ background: var(--panel-2); color: var(--text); }
+.nav-item.is-active{ background: rgba(255,138,76,0.14); color: var(--accent); }
+.nav-ico{ width:16px; text-align:center; opacity:.85; }
+
+.rail-foot{ margin-top:auto; display:flex; flex-direction:column; gap:10px; }
+.conn-pill{ display:flex; align-items:center; gap:8px; font-size:11.5px; color: var(--muted); padding: 0 8px; }
+.conn-dot{ width:7px; height:7px; border-radius:50%; background: var(--danger); }
+.conn-dot.ok{ background: var(--success); box-shadow: 0 0 8px rgba(53,214,140,.5); animation: pulse 2s infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.4;} }
+.theme-toggle{
+  display:flex; align-items:center; justify-content:space-between; background: var(--panel-2);
+  border:1px solid var(--border); border-radius: 999px; padding: 4px; margin: 0 8px;
+}
+.theme-toggle button{
+  flex:1; background:none; border:none; color: var(--muted); font-size:11px; padding:6px 0;
+  border-radius:999px; cursor:pointer;
+}
+.theme-toggle button.is-active{ background: var(--accent); color:#fff; }
+
+.stage{ padding: 26px 34px 60px; max-width: 1320px; }
+.topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 22px; gap: 16px; flex-wrap: wrap; }
+.topbar h1{ font-family: var(--font-display); font-size:21px; margin:0; font-weight:700; display:flex; align-items:center; gap:10px; }
+.topbar .crumb-back{ background:none; border:none; color: var(--muted); cursor:pointer; font-size:18px; padding:2px 4px; }
+.topbar .crumb-back:hover{ color: var(--text); }
+.operator-field{ display:flex; align-items:center; gap:8px; font-size:12px; color: var(--muted); }
+.operator-field input{ background: var(--panel-2); border:1px solid var(--border); color: var(--text); border-radius:8px; padding:6px 10px; font-size:12.5px; width:140px; }
+
+.view{ display:none; }
+.view.is-active{ display:block; animation: fadeIn .18s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+/* ---------- shared components ---------- */
+.stat-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:14px; margin-bottom: 22px; }
+.stat-card{ background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding:15px 17px; display:flex; flex-direction:column; gap:7px; box-shadow: var(--shadow); }
+.stat-label{ font-size:10.5px; color: var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+.stat-value{ font-family: var(--font-mono); font-size:23px; font-weight:500; }
+.stat-value.good{ color: var(--success); }
+.stat-value.warn{ color: var(--warning); }
+.stat-value.bad{ color: var(--danger); }
+
+.panel{ background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom:20px; box-shadow: var(--shadow); }
+.panel-head{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin-bottom:16px; }
+.panel-head h2{ font-family: var(--font-display); font-size:15px; margin:0; font-weight:700; width:100%; }
+.panel-sub{ font-size:12px; color: var(--muted); flex:1 1 auto; }
+.inline-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-left:auto; }
+.grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+.grid-3{ display:grid; grid-template-columns: repeat(3,1fr); gap:18px; }
+@media (max-width: 1000px){ .grid-2, .grid-3{ grid-template-columns: 1fr; } .stat-grid{ grid-template-columns: repeat(2,1fr); } #app.is-ready{ grid-template-columns: 1fr; } .rail{ display:none; } }
+
+.btn{ background: var(--panel-2); color: var(--text); border:1px solid var(--border); border-radius:8px; padding: 8px 14px; font-size:12.5px; font-weight:500; cursor:pointer; transition: border-color .15s, background .15s, transform .05s; }
+.btn:hover{ border-color: var(--accent-2); background: var(--panel-3); }
+.btn:active{ transform: scale(.98); }
+.btn:disabled{ opacity:.5; cursor:default; }
+.btn-sm{ padding:5px 10px; font-size:11.5px; }
+.btn-accent{ background: var(--accent); border-color: var(--accent); color:#fff; font-weight:600; }
+.btn-accent:hover{ filter: brightness(1.07); background:var(--accent); border-color:var(--accent); }
+.btn-danger{ color: var(--danger); }
+
+.badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; background: var(--panel-3); color: var(--muted); }
+.badge.b-good{ background: rgba(53,214,140,0.16); color: var(--success); }
+.badge.b-warn{ background: rgba(245,185,77,0.16); color: var(--warning); }
+.badge.b-bad{ background: rgba(255,92,122,0.16); color: var(--danger); }
+.badge.b-muted{ background: var(--panel-3); color: var(--muted); }
+
+.table-wrap{ overflow-x:auto; }
+.data-table{ width:100%; border-collapse: collapse; font-size:13px; }
+.data-table th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color: var(--muted); border-bottom:1px solid var(--border); padding:8px 10px; font-weight:600; white-space:nowrap; }
+.data-table td{ padding:10px; border-bottom:1px solid var(--border); font-family: var(--font-mono); font-size:12.5px; vertical-align:middle; }
+.data-table tr.clickable{ cursor:pointer; }
+.data-table tr.clickable:hover td{ background: var(--panel-2); }
+.muted{ color: var(--muted); font-family: var(--font-body); }
+
+.vm-grid, .node-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:14px; }
+.entity-card{ background: var(--panel-2); border:1px solid var(--border); border-radius: var(--radius); padding:16px; display:flex; flex-direction:column; gap:9px; cursor:pointer; transition: border-color .15s; }
+.entity-card:hover{ border-color: var(--accent-2); }
+.entity-card-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.entity-title{ font-family: var(--font-display); font-weight:700; font-size:14px; }
+.entity-sub{ font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color: var(--muted); }
+.entity-meta{ font-family: var(--font-mono); font-size:11.5px; color: var(--muted); display:flex; flex-direction:column; gap:2px; }
+.dot{ width:9px; height:9px; border-radius:50%; background: var(--danger); flex-shrink:0; }
+.dot.ok{ background: var(--success); box-shadow: 0 0 8px rgba(53,214,140,.5); animation: pulse 2s infinite; }
+.dot.warn{ background: var(--warning); }
+
+.kv-list{ display:flex; flex-direction:column; gap:8px; font-family: var(--font-mono); font-size:12px; }
+.kv-row{ display:flex; gap:10px; align-items:baseline; }
+.kv-key{ color: var(--muted); min-width:150px; flex-shrink:0; font-family: var(--font-body); font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
+.kv-val.unavailable{ color: var(--muted); font-style: italic; }
+
+.alert-item{ display:flex; gap:12px; align-items:flex-start; padding:11px 4px; border-bottom:1px solid var(--border); }
+.alert-item:last-child{ border-bottom:none; }
+.alert-sev{ width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+.alert-sev.critical{ background: var(--danger); }
+.alert-sev.warning{ background: var(--warning); }
+.alert-body{ flex:1; }
+.alert-msg{ font-size:13px; }
+.alert-meta{ font-size:11px; color: var(--muted); font-family: var(--font-mono); margin-top:2px; }
+.empty-hint{ color: var(--muted); font-size:13px; text-align:center; padding:26px 10px; }
+
+.log-output{ background: var(--panel-2); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-family: var(--font-mono); font-size:11.5px; white-space:pre-wrap; word-break:break-all; max-height:340px; overflow-y:auto; }
+
+.chart-wrap{ position:relative; height: 220px; }
+
+.settings-form{ display:flex; flex-direction:column; gap:14px; max-width:520px; }
+.settings-form label{ display:flex; flex-direction:column; gap:6px; font-size:12px; color: var(--muted); }
+.settings-form input{ background: var(--panel-2); border:1px solid var(--border); color: var(--text); border-radius:8px; padding:9px 11px; font-family: var(--font-mono); font-size:13px; }
+.form-row{ display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+
+.modal-backdrop{ display:none; position:fixed; inset:0; background: rgba(4,6,12,.55); align-items:center; justify-content:center; z-index:50; padding:20px; }
+.modal-backdrop.is-open{ display:flex; }
+.modal{ background: var(--panel); border:1px solid var(--border); border-radius: var(--radius); width:100%; max-width:640px; max-height:82vh; overflow-y:auto; padding:22px 24px; box-shadow: var(--shadow); }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.modal-head h3{ font-family: var(--font-display); margin:0; font-size:15px; }
+.modal-close{ background:none; border:none; color: var(--muted); font-size:18px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- ========== main app shell (connects automatically, no login/config step) ========== -->
+<div id="app"></div>
+
+<!-- ========== command output modal ========== -->
+<div class="modal-backdrop" id="commandModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="commandModalTitle">Command</h3>
+      <button class="modal-close" id="commandModalClose">✕</button>
+    </div>
+    <div id="commandModalBody"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* global Chart */
+
+// ============================================================================
+// Config
+// ============================================================================
+// Fixed public Firebase Realtime Database URL. No API key, no sign-in, no
+// per-user setup step: the dashboard talks straight to this REST endpoint,
+// and it works precisely because firebase/database.rules.json leaves read
+// and write open to anyone with the URL. Override with ?db=<url> if you
+// ever need to point this same static file at a different database.
+const FIREBASE_DB_URL =
+	new URLSearchParams(location.search).get("db") || "https://obyte-af856-default-rtdb.firebaseio.com";
+
+const LS_PREFS = "obyte-fleet-dashboard:prefs";
+
+function loadPrefs() {
+	try {
+		return { theme: "dark", operatorName: "", thresholds: defaultThresholds(), ...JSON.parse(localStorage.getItem(LS_PREFS) || "{}") };
+	} catch {
+		return { theme: "dark", operatorName: "", thresholds: defaultThresholds() };
+	}
+}
+function savePrefs(p) {
+	localStorage.setItem(LS_PREFS, JSON.stringify(p));
+}
+function defaultThresholds() {
+	return {
+		cpuPercent: 85,
+		memPercent: 90,
+		diskPercent: 90,
+		heartbeatStaleSec: 30,
+		syncBehindUnits: 20,
+	};
+}
+
+const prefs = loadPrefs();
+document.documentElement.setAttribute("data-theme", prefs.theme);
+
+// ============================================================================
+// State
+// ============================================================================
+const state = {
+	vms: {}, // { vmId: { info, heartbeat, metrics, projects, nodes } }
+	commands: {}, // { vmId: { cmdId: {...} } }
+	connected: false,
+	view: "global", // global | vms | vm-detail | node-detail | alerts | settings
+	selectedVmId: null,
+	selectedNodeId: null,
+	history: {}, // { "vmId:cpu": [{t,v}, ...] } rolling client-side buffers for charts
+};
+
+const MAX_HISTORY_POINTS = 60;
+function pushHistory(key, value) {
+	if (value === null || value === undefined) return;
+	if (!state.history[key]) state.history[key] = [];
+	state.history[key].push({ t: Date.now(), v: value });
+	if (state.history[key].length > MAX_HISTORY_POINTS) state.history[key].shift();
+}
+
+// ============================================================================
+// Formatting helpers
+// ============================================================================
+function fmtBytes(n) {
+	if (n === null || n === undefined) return "—";
+	if (n === 0) return "0 B";
+	const units = ["B", "KB", "MB", "GB", "TB"];
+	const i = Math.min(units.length - 1, Math.floor(Math.log(n) / Math.log(1024)));
+	return `${(n / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+}
+function fmtBps(n) {
+	if (n === null || n === undefined) return "—";
+	return `${fmtBytes(n)}/s`;
+}
+function fmtPct(n) {
+	return n === null || n === undefined ? "—" : `${Math.round(n * 10) / 10}%`;
+}
+function fmtUptime(sec) {
+	if (sec === null || sec === undefined) return "—";
+	const d = Math.floor(sec / 86400),
+		h = Math.floor((sec % 86400) / 3600),
+		m = Math.floor((sec % 3600) / 60);
+	if (d > 0) return `${d}d ${h}h`;
+	if (h > 0) return `${h}h ${m}m`;
+	return `${m}m`;
+}
+function fmtAgo(ts) {
+	if (!ts) return "never";
+	const sec = Math.round((Date.now() - ts) / 1000);
+	if (sec < 5) return "just now";
+	if (sec < 60) return `${sec}s ago`;
+	if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
+	return `${Math.floor(sec / 3600)}h ago`;
+}
+function shortHash(h) {
+	if (!h) return "—";
+	return h.length > 16 ? `${h.slice(0, 8)}…${h.slice(-6)}` : h;
+}
+function esc(s) {
+	return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function isVmOnline(vm) {
+	if (!vm || !vm.heartbeat) return false;
+	if (vm.heartbeat.online === false) return false;
+	return Date.now() - (vm.heartbeat.lastSeen || 0) < prefs.thresholds.heartbeatStaleSec * 1000;
+}
+
+// ============================================================================
+// Alerts (computed live, client-side, from whatever's currently in `state`)
+// ============================================================================
+function computeAlerts() {
+	const alerts = [];
+	const t = prefs.thresholds;
+
+	if (!state.connected) {
+		alerts.push({ severity: "critical", message: "Firebase Realtime Database connection is down — metrics and commands are stale until it reconnects.", meta: "connection" });
+	}
+
+	for (const [vmId, vm] of Object.entries(state.vms)) {
+		const name = vm.info?.name || vmId;
+		const online = isVmOnline(vm);
+		if (!online) {
+			alerts.push({ severity: "critical", message: `${name} is offline (last heartbeat ${fmtAgo(vm.heartbeat?.lastSeen)}).`, meta: vmId });
+			continue; // skip resource/docker alerts for a VM we have no fresh data from
+		}
+		const sys = vm.metrics?.system;
+		if (sys) {
+			if (sys.cpuPercent > t.cpuPercent) alerts.push({ severity: "warning", message: `${name}: CPU at ${fmtPct(sys.cpuPercent)} (threshold ${t.cpuPercent}%).`, meta: vmId });
+			if (sys.memTotal) {
+				const memPct = (sys.memUsed / sys.memTotal) * 100;
+				if (memPct > t.memPercent) alerts.push({ severity: "warning", message: `${name}: Memory at ${fmtPct(memPct)} (threshold ${t.memPercent}%).`, meta: vmId });
+			}
+			for (const d of sys.disks || []) {
+				if (d.usePercent > t.diskPercent) alerts.push({ severity: "warning", message: `${name}: Disk ${d.mount} at ${fmtPct(d.usePercent)} (threshold ${t.diskPercent}%).`, meta: vmId });
+			}
+		}
+		if (vm.metrics?.docker && vm.metrics.docker.daemonRunning === false) {
+			alerts.push({ severity: "critical", message: `${name}: Docker daemon is not running.`, meta: vmId });
+		}
+		for (const [nodeId, node] of Object.entries(vm.nodes || {})) {
+			const nodeName = `${name} / ${node.info?.label || nodeId}`;
+			if (node.status?.state === "unreachable") {
+				alerts.push({ severity: "warning", message: `${nodeName}: blockchain metrics endpoint unreachable.`, meta: `${vmId}:${nodeId}` });
+			}
+			if (typeof node.sync?.estimatedMissingUnits === "number" && node.sync.estimatedMissingUnits > t.syncBehindUnits) {
+				alerts.push({ severity: "warning", message: `${nodeName}: ${node.sync.estimatedMissingUnits} units behind the furthest-synced node in its project.`, meta: `${vmId}:${nodeId}` });
+			}
+		}
+		for (const [projectId, project] of Object.entries(vm.projects || {})) {
+			for (const [cName, c] of Object.entries(project.containers || {})) {
+				if (c.status && c.status !== "running" && c.status !== "not_found") {
+					alerts.push({ severity: c.status === "exited" ? "warning" : "critical", message: `${name} / ${projectId}: container "${cName}" is ${c.status}${c.restartCount ? ` (${c.restartCount} restarts)` : ""}.`, meta: vmId });
+				}
+			}
+		}
+	}
+	return alerts;
+}
+
+// ============================================================================
+// Firebase Realtime Database client - no SDK, no API key, no auth.
+//
+// Just two plain browser primitives against the public REST API:
+//   - `fetch()` for one-shot / write requests (GET, PUT, PATCH, POST)
+//   - `EventSource` for live updates - Firebase's REST endpoint natively
+//     speaks Server-Sent Events to any client that asks for
+//     `text/event-stream`, which is exactly what EventSource always sends.
+// This mirrors vm-agent/src/firebase.js on the Node side, just using fetch
+// instead of `https` and skipping everything auth-related. It only works
+// unauthenticated because firebase/database.rules.json has open .read/.write
+// rules - see that file for the tradeoff.
+// ============================================================================
+class FirebaseRest {
+	constructor(baseUrl) {
+		this.base = baseUrl.replace(/\/+$/, "");
+	}
+	_url(path) {
+		return `${this.base}/${path.replace(/^\/+/, "")}.json`;
+	}
+	async get(path) {
+		const res = await fetch(this._url(path));
+		if (!res.ok) throw new Error(`GET ${path} -> HTTP ${res.status}`);
+		return res.json();
+	}
+	async set(path, value) {
+		const res = await fetch(this._url(path), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(value) });
+		if (!res.ok) throw new Error(`PUT ${path} -> HTTP ${res.status}: ${await res.text()}`);
+		return res.json();
+	}
+	async update(path, value) {
+		const res = await fetch(this._url(path), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(value) });
+		if (!res.ok) throw new Error(`PATCH ${path} -> HTTP ${res.status}: ${await res.text()}`);
+		return res.json();
+	}
+	/** Appends a new auto-ID child under `path`, returns its key. */
+	async push(path, value) {
+		const res = await fetch(this._url(path), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(value) });
+		if (!res.ok) throw new Error(`POST ${path} -> HTTP ${res.status}: ${await res.text()}`);
+		const data = await res.json();
+		return data.name;
+	}
+	/**
+	 * Mimics the SDK's `ref(path).on("value", cb)`: keeps a local mirror of
+	 * whatever's at `path` up to date from the SSE "put"/"patch" stream and
+	 * calls onValue(mirror) after every change (including the initial dump,
+	 * which arrives as one "put" at path "/"). onConnState(bool) fires on
+	 * every SSE open/error, which is the closest unauthenticated-REST
+	 * equivalent of the SDK's ".info/connected" special path. Returns a
+	 * function to stop listening.
+	 */
+	listenValue(path, onValue, onConnState) {
+		let value = undefined;
+		const es = new EventSource(this._url(path));
+		es.addEventListener("put", (e) => {
+			const { path: p, data } = JSON.parse(e.data);
+			value = applyAtPath(value, p, data);
+			onValue(value);
+		});
+		es.addEventListener("patch", (e) => {
+			const { path: p, data } = JSON.parse(e.data);
+			let next = value;
+			for (const [childKey, childVal] of Object.entries(data)) {
+				next = applyAtPath(next, p === "/" ? `/${childKey}` : `${p}/${childKey}`, childVal);
+			}
+			value = next;
+			onValue(value);
+		});
+		es.onopen = () => onConnState && onConnState(true);
+		es.onerror = () => onConnState && onConnState(false);
+		return () => es.close();
+	}
+	/** Firebase's server-assigned timestamp sentinel - resolved server-side. */
+	static serverTimestamp() {
+		return { ".sv": "timestamp" };
+	}
+}
+
+/** Immutably replaces the value at `path` (Firebase-style "/a/b/c") within `root`. */
+function applyAtPath(root, path, value) {
+	const parts = path.split("/").filter(Boolean);
+	if (!parts.length) return value;
+	const rootCopy = root && typeof root === "object" ? { ...root } : {};
+	let cursor = rootCopy;
+	for (let i = 0; i < parts.length - 1; i++) {
+		const key = parts[i];
+		const next = cursor[key] && typeof cursor[key] === "object" ? { ...cursor[key] } : {};
+		cursor[key] = next;
+		cursor = next;
+	}
+	const lastKey = parts[parts.length - 1];
+	if (value === null || value === undefined) delete cursor[lastKey];
+	else cursor[lastKey] = value;
+	return rootCopy;
+}
+
+let fb = null;
+
+function connectFirebase(dbUrl) {
+	fb = new FirebaseRest(dbUrl);
+
+	fb.listenValue(
+		"vms",
+		(vms) => {
+			state.vms = vms || {};
+			for (const [vmId, vm] of Object.entries(state.vms)) {
+				if (vm.metrics?.system) {
+					pushHistory(`${vmId}:cpu`, vm.metrics.system.cpuPercent);
+					pushHistory(`${vmId}:mem`, vm.metrics.system.memTotal ? (vm.metrics.system.memUsed / vm.metrics.system.memTotal) * 100 : null);
+				}
+				for (const node of Object.values(vm.nodes || {})) {
+					if (typeof node.sync?.unitsPerSecond === "number") pushHistory(`${vmId}:units`, node.sync.unitsPerSecond);
+				}
+			}
+			renderCurrentView();
+		},
+		(connected) => {
+			state.connected = connected;
+			renderConnPill();
+			renderCurrentView();
+		}
+	);
+
+	fb.listenValue("commands", (commands) => {
+		state.commands = commands || {};
+		renderCurrentView();
+	});
+}
+
+async function sendCommand(vmId, type, action, target, args) {
+	const key = await fb.push(`commands/${vmId}`, {
+		type,
+		action,
+		target,
+		args: args || null,
+		requestedBy: prefs.operatorName || "anonymous",
+		requestedAt: FirebaseRest.serverTimestamp(),
+		status: "queued",
+		output: "",
+		error: null,
+	});
+	return key;
+}
+
+// ============================================================================
+// App shell
+// ============================================================================
+const NAV_ITEMS = [
+	{ view: "global", label: "Global Dashboard", icon: "◎" },
+	{ view: "vms", label: "VMs", icon: "▣" },
+	{ view: "alerts", label: "Alerts", icon: "▲" },
+	{ view: "settings", label: "Settings", icon: "⚙" },
+];
+
+function renderAppShell() {
+	const app = document.getElementById("app");
+	app.classList.add("is-ready");
+	app.innerHTML = `
+		<div class="rail">
+			<div class="brand">
+				<span class="brand-mark">◆</span>
+				<div class="brand-text"><strong>OBYTE FLEET</strong><span>ADMIN CONSOLE</span></div>
+			</div>
+			<nav class="nav" id="nav">
+				${NAV_ITEMS.map((n) => `<button class="nav-item" data-view="${n.view}"><span class="nav-ico">${n.icon}</span>${n.label}</button>`).join("")}
+			</nav>
+			<div class="rail-foot">
+				<div class="conn-pill" id="connPill"><span class="conn-dot"></span><span id="connPillText">connecting…</span></div>
+				<div class="theme-toggle" id="themeToggle">
+					<button data-theme-btn="dark">Dark</button>
+					<button data-theme-btn="light">Light</button>
+				</div>
+			</div>
+		</div>
+		<div class="stage">
+			<div class="topbar">
+				<h1 id="pageTitle"><button class="crumb-back" id="crumbBack" style="display:none;">←</button><span id="pageTitleText">Global Dashboard</span></h1>
+				<div class="operator-field">Operator name <input id="operatorInput" placeholder="you@company.com" value="${esc(prefs.operatorName)}" /></div>
+			</div>
+			<div id="stageContent"></div>
+		</div>
+	`;
+
+	document.getElementById("nav").addEventListener("click", (e) => {
+		const btn = e.target.closest("[data-view]");
+		if (!btn) return;
+		state.selectedVmId = null;
+		state.selectedNodeId = null;
+		setView(btn.dataset.view);
+	});
+	document.getElementById("crumbBack").addEventListener("click", () => {
+		if (state.view === "node-detail") setView("vm-detail");
+		else setView("vms");
+	});
+	document.getElementById("themeToggle").addEventListener("click", (e) => {
+		const btn = e.target.closest("[data-theme-btn]");
+		if (!btn) return;
+		prefs.theme = btn.dataset.themeBtn;
+		savePrefs(prefs);
+		document.documentElement.setAttribute("data-theme", prefs.theme);
+		renderThemeToggle();
+	});
+	document.getElementById("operatorInput").addEventListener("change", (e) => {
+		prefs.operatorName = e.target.value.trim();
+		savePrefs(prefs);
+	});
+	renderThemeToggle();
+}
+
+function renderThemeToggle() {
+	document.querySelectorAll("[data-theme-btn]").forEach((b) => b.classList.toggle("is-active", b.dataset.themeBtn === prefs.theme));
+}
+
+function renderConnPill() {
+	const dot = document.querySelector("#connPill .conn-dot");
+	const text = document.getElementById("connPillText");
+	if (!dot) return;
+	dot.classList.toggle("ok", state.connected);
+	text.textContent = state.connected ? "Firebase connected" : "Firebase disconnected";
+}
+
+function setView(view) {
+	state.view = view;
+	document.querySelectorAll(".nav-item").forEach((b) => b.classList.toggle("is-active", b.dataset.view === view));
+	document.getElementById("crumbBack").style.display = view === "vm-detail" || view === "node-detail" ? "inline" : "none";
+	renderCurrentView();
+}
+
+let activeCharts = [];
+function destroyCharts() {
+	activeCharts.forEach((c) => c.destroy());
+	activeCharts = [];
+}
+
+function renderCurrentView() {
+	if (!document.getElementById("stageContent")) return; // shell not built yet
+	destroyCharts();
+	const titleEl = document.getElementById("pageTitleText");
+	const content = document.getElementById("stageContent");
+	switch (state.view) {
+		case "global":
+			titleEl.textContent = "Global Dashboard";
+			content.innerHTML = renderGlobalView();
+			break;
+		case "vms":
+			titleEl.textContent = "Virtual Machines";
+			content.innerHTML = renderVmsView();
+			break;
+		case "vm-detail":
+			titleEl.textContent = state.vms[state.selectedVmId]?.info?.name || state.selectedVmId;
+			content.innerHTML = renderVmDetailView(state.selectedVmId);
+			break;
+		case "node-detail":
+			titleEl.textContent = getNode(state.selectedVmId, state.selectedNodeId)?.info?.label || state.selectedNodeId;
+			content.innerHTML = renderNodeDetailView(state.selectedVmId, state.selectedNodeId);
+			break;
+		case "alerts":
+			titleEl.textContent = "Alerts";
+			content.innerHTML = renderAlertsView();
+			break;
+		case "settings":
+			titleEl.textContent = "Settings";
+			content.innerHTML = renderSettingsView();
+			break;
+	}
+	wireStageEvents();
+	drawPendingCharts();
+	renderCommandModal();
+}
+
+function getNode(vmId, nodeId) {
+	return state.vms[vmId]?.nodes?.[nodeId] || null;
+}
+
+// ============================================================================
+// Small render helpers
+// ============================================================================
+function emptyHint(text) {
+	return `<div class="empty-hint">${esc(text)}</div>`;
+}
+function kv(pairs) {
+	return `<div class="kv-list">${pairs
+		.map(([k, v, unavailable]) => `<div class="kv-row"><span class="kv-key">${esc(k)}</span><span class="kv-val${unavailable ? " unavailable" : ""}">${v}</span></div>`)
+		.join("")}</div>`;
+}
+function renderAlertList(alerts) {
+	if (!alerts.length) return emptyHint("No active alerts. Everything's within thresholds.");
+	return `<div>${alerts
+		.map(
+			(a) => `<div class="alert-item">
+				<span class="alert-sev ${a.severity}"></span>
+				<div class="alert-body"><div class="alert-msg">${esc(a.message)}</div><div class="alert-meta">${a.severity} · ${esc(a.meta)}</div></div>
+			</div>`
+		)
+		.join("")}</div>`;
+}
+
+function vmCard(vmId, vm) {
+	const online = isVmOnline(vm);
+	const sys = vm.metrics?.system;
+	const nodeCount = Object.keys(vm.nodes || {}).length;
+	return `<div class="entity-card" data-open-vm="${vmId}">
+		<div class="entity-card-head">
+			<div><div class="entity-sub">${esc(vm.info?.os || "unknown OS")}</div><div class="entity-title">${esc(vm.info?.name || vmId)}</div></div>
+			<span class="dot ${online ? "ok" : ""}"></span>
+		</div>
+		<div class="entity-meta">
+			<span>${esc(vm.info?.hostname || "")} ${vm.info?.ip ? `(${esc(vm.info.ip)})` : ""}</span>
+			<span>CPU ${sys ? fmtPct(sys.cpuPercent) : "—"} · Mem ${sys && sys.memTotal ? fmtPct((sys.memUsed / sys.memTotal) * 100) : "—"}</span>
+			<span>${nodeCount} Obyte node${nodeCount === 1 ? "" : "s"} · heartbeat ${fmtAgo(vm.heartbeat?.lastSeen)}</span>
+		</div>
+	</div>`;
+}
+
+function nodeCard(vmId, nodeId, node) {
+	const ok = node.status?.state === "ok";
+	const unreachable = node.status?.state === "unreachable";
+	return `<div class="entity-card" data-open-node="${vmId}::${nodeId}">
+		<div class="entity-card-head">
+			<div><div class="entity-sub">${esc(node.info?.role || "node")}</div><div class="entity-title">${esc(node.info?.label || nodeId)}</div></div>
+			<span class="dot ${ok ? "ok" : unreachable ? "" : "warn"}"></span>
+		</div>
+		<div class="entity-meta">
+			<span>MCI ${node.sync?.latestStableMci ?? "—"} · sync ${node.sync?.syncPercent != null ? fmtPct(node.sync.syncPercent) : "—"}</span>
+			<span>${node.storage?.totalUnits ?? "—"} units stored</span>
+			<span class="badge ${ok ? "b-good" : unreachable ? "b-bad" : "b-muted"}">${esc(node.status?.state || "unknown")}</span>
+		</div>
+	</div>`;
+}
+
+let chartQueue = [];
+function queueChart(canvasId, historyKey, label, color) {
+	chartQueue.push({ canvasId, historyKey, label, color });
+}
+function drawPendingCharts() {
+	const queue = chartQueue;
+	chartQueue = [];
+	queue.forEach(({ canvasId, historyKey, label, color }) => {
+		const canvas = document.getElementById(canvasId);
+		if (!canvas || typeof Chart === "undefined") return;
+		const points = state.history[historyKey] || [];
+		const chart = new Chart(canvas, {
+			type: "line",
+			data: {
+				labels: points.map((p) => new Date(p.t).toLocaleTimeString()),
+				datasets: [{ label, data: points.map((p) => p.v), borderColor: color, backgroundColor: `${color}33`, tension: 0.3, fill: true, pointRadius: 0, borderWidth: 2 }],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				scales: { x: { display: false }, y: { grid: { color: "rgba(128,128,128,0.15)" }, ticks: { color: "#8993B0", font: { size: 10 } } } },
+				plugins: { legend: { display: false } },
+			},
+		});
+		activeCharts.push(chart);
+	});
+}
+
+// ============================================================================
+// Global Dashboard view
+// ============================================================================
+function renderGlobalView() {
+	const vms = Object.entries(state.vms);
+	const totalVMs = vms.length;
+	const onlineVMs = vms.filter(([, vm]) => isVmOnline(vm)).length;
+	const offlineVMs = totalVMs - onlineVMs;
+
+	let totalNodes = 0, okNodes = 0, totalUnits = 0, sumCpu = 0, cpuCount = 0, sumMemPct = 0, memCount = 0, sumSyncPct = 0, syncCount = 0, sumUnitsPerSec = 0;
+	for (const [, vm] of vms) {
+		for (const node of Object.values(vm.nodes || {})) {
+			totalNodes++;
+			if (node.status?.state === "ok") okNodes++;
+			if (typeof node.storage?.totalUnits === "number") totalUnits += node.storage.totalUnits;
+			if (typeof node.sync?.syncPercent === "number") { sumSyncPct += node.sync.syncPercent; syncCount++; }
+			if (typeof node.sync?.unitsPerSecond === "number") sumUnitsPerSec += node.sync.unitsPerSecond;
+		}
+		if (vm.metrics?.system) {
+			sumCpu += vm.metrics.system.cpuPercent;
+			cpuCount++;
+			if (vm.metrics.system.memTotal) { sumMemPct += (vm.metrics.system.memUsed / vm.metrics.system.memTotal) * 100; memCount++; }
+		}
+	}
+	const alerts = computeAlerts();
+	const criticalCount = alerts.filter((a) => a.severity === "critical").length;
+	const healthScore = totalVMs === 0 ? 0 : Math.max(0, Math.round(100 * (onlineVMs / totalVMs) - criticalCount * 8 - (alerts.length - criticalCount) * 3));
+
+	// aggregate unit-throughput chart across every node with history
+	const unitsKeys = Object.keys(state.history).filter((k) => k.endsWith(":units"));
+	if (unitsKeys.length) {
+		const allTimes = [...new Set(unitsKeys.flatMap((k) => state.history[k].map((p) => p.t)))].sort((a, b) => a - b);
+		state.history["__global:units"] = allTimes.map((t) => ({
+			t,
+			v: unitsKeys.reduce((sum, k) => {
+				const pt = state.history[k].find((p) => p.t === t);
+				return sum + (pt ? pt.v : 0);
+			}, 0),
+		}));
+		queueChart("chartGlobalUnits", "__global:units", "units/s", "#22D3C8");
+	}
+
+	return `
+		<div class="stat-grid">
+			<div class="stat-card"><span class="stat-label">VMs online</span><span class="stat-value ${offlineVMs > 0 ? "warn" : "good"}">${onlineVMs} / ${totalVMs}</span></div>
+			<div class="stat-card"><span class="stat-label">Obyte nodes</span><span class="stat-value">${totalNodes}</span></div>
+			<div class="stat-card"><span class="stat-label">Nodes reporting</span><span class="stat-value ${okNodes < totalNodes ? "warn" : "good"}">${okNodes} / ${totalNodes}</span></div>
+			<div class="stat-card"><span class="stat-label">Avg CPU</span><span class="stat-value">${cpuCount ? fmtPct(sumCpu / cpuCount) : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Avg memory</span><span class="stat-value">${memCount ? fmtPct(sumMemPct / memCount) : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Avg sync</span><span class="stat-value">${syncCount ? fmtPct(sumSyncPct / syncCount) : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Aggregate throughput</span><span class="stat-value">${sumUnitsPerSec ? `${Math.round(sumUnitsPerSec * 100) / 100 } u/s` : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Total stored units</span><span class="stat-value">${totalUnits || "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Health score</span><span class="stat-value ${healthScore > 80 ? "good" : healthScore > 50 ? "warn" : "bad"}">${healthScore}</span></div>
+			<div class="stat-card"><span class="stat-label">Active alerts</span><span class="stat-value ${criticalCount ? "bad" : alerts.length ? "warn" : "good"}">${alerts.length}</span></div>
+		</div>
+
+		${unitsKeys.length ? `<div class="panel"><div class="panel-head"><h2>Aggregate unit throughput</h2><span class="panel-sub">Sum of all nodes' units/sec, since this dashboard was opened</span></div><div class="chart-wrap"><canvas id="chartGlobalUnits"></canvas></div></div>` : ""}
+
+		<div class="panel">
+			<div class="panel-head"><h2>Virtual machines</h2><span class="panel-sub">Click a card to drill in</span></div>
+			${vms.length ? `<div class="vm-grid">${vms.map(([id, vm]) => vmCard(id, vm)).join("")}</div>` : emptyHint("No VMs registered yet — start a VM Agent pointing at this Firebase project (see vm-agent/README.md).")}
+		</div>
+
+		<div class="panel">
+			<div class="panel-head"><h2>Recent alerts</h2><span class="panel-sub">${alerts.length} active${alerts.length > 6 ? " · showing 6" : ""}</span></div>
+			${renderAlertList(alerts.slice(0, 6))}
+		</div>
+	`;
+}
+
+// ============================================================================
+// VMs list view
+// ============================================================================
+function renderVmsView() {
+	const vms = Object.entries(state.vms);
+	if (!vms.length) return emptyHint("No VMs registered yet — start a VM Agent pointing at this Firebase project (see vm-agent/README.md).");
+	return `<div class="vm-grid">${vms.map(([id, vm]) => vmCard(id, vm)).join("")}</div>`;
+}
+
+// ============================================================================
+// VM Detail view
+// ============================================================================
+function renderVmDetailView(vmId) {
+	const vm = state.vms[vmId];
+	if (!vm) return emptyHint("This VM is no longer reporting.");
+	const online = isVmOnline(vm);
+	const sys = vm.metrics?.system;
+	const docker = vm.metrics?.docker;
+
+	queueChart(`chartCpu_${vmId}`, `${vmId}:cpu`, "CPU %", "#FF8A4C");
+	queueChart(`chartMem_${vmId}`, `${vmId}:mem`, "Memory %", "#22D3C8");
+
+	const projectsHtml = Object.entries(vm.projects || {})
+		.map(([projectId, project]) => renderProjectPanel(vmId, projectId, project))
+		.join("");
+
+	const nodes = Object.entries(vm.nodes || {});
+	const nodesHtml = nodes.length ? `<div class="node-grid">${nodes.map(([nodeId, node]) => nodeCard(vmId, nodeId, node)).join("")}</div>` : emptyHint("No Obyte nodes configured for this VM.");
+
+	const cmdHistory = Object.entries(state.commands[vmId] || {}).sort((a, b) => (b[1].requestedAt || 0) - (a[1].requestedAt || 0));
+
+	return `
+		<div class="stat-grid">
+			<div class="stat-card"><span class="stat-label">Status</span><span class="stat-value ${online ? "good" : "bad"}">${online ? "online" : "offline"}</span></div>
+			<div class="stat-card"><span class="stat-label">CPU cores</span><span class="stat-value">${vm.info?.cpuCores ?? "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">CPU load</span><span class="stat-value">${sys ? fmtPct(sys.cpuPercent) : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Memory</span><span class="stat-value">${sys ? `${fmtBytes(sys.memUsed)} / ${fmtBytes(sys.memTotal)}` : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Swap</span><span class="stat-value">${sys && sys.swapTotal ? `${fmtBytes(sys.swapUsed)} / ${fmtBytes(sys.swapTotal)}` : "none"}</span></div>
+			<div class="stat-card"><span class="stat-label">Uptime</span><span class="stat-value">${sys ? fmtUptime(sys.uptimeSec) : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Docker</span><span class="stat-value ${docker?.daemonRunning === false ? "bad" : "good"}">${docker?.daemonRunning === false ? "down" : docker?.version || "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Containers</span><span class="stat-value">${docker ? `${docker.containersRunning ?? "—"} / ${docker.containersTotal ?? "—"}` : "—"}</span></div>
+		</div>
+
+		<div class="panel">
+			<div class="panel-head"><h2>Host info</h2></div>
+			${kv([
+				["Hostname", esc(vm.info?.hostname || "—")],
+				["IP address", esc(vm.info?.ip || "—")],
+				["OS", esc(vm.info?.os || "—")],
+				["Kernel", esc(vm.info?.osVersion || "—")],
+				["Architecture", esc(vm.info?.arch || "—")],
+				["CPU model", esc(vm.info?.cpuModel || "—")],
+				["Docker Compose", esc(vm.info?.composeVersion || "—")],
+				["Agent version", esc(vm.info?.agentVersion || "—")],
+				["Last heartbeat", fmtAgo(vm.heartbeat?.lastSeen)],
+				["Disks", sys && sys.disks?.length ? sys.disks.map((d) => `${esc(d.mount)}: ${fmtBytes(d.used)}/${fmtBytes(d.total)} (${fmtPct(d.usePercent)})`).join("<br/>") : "—"],
+				["Disk I/O", sys ? `${fmtBps(sys.diskIO?.readBps)} read · ${fmtBps(sys.diskIO?.writeBps)} write` : "—"],
+				["Network", sys ? `${fmtBps(sys.net?.rxBps)} in · ${fmtBps(sys.net?.txBps)} out` : "—"],
+			])}
+		</div>
+
+		<div class="grid-2">
+			<div class="panel"><div class="panel-head"><h2>CPU history</h2><span class="panel-sub">since dashboard opened</span></div><div class="chart-wrap"><canvas id="chartCpu_${vmId}"></canvas></div></div>
+			<div class="panel"><div class="panel-head"><h2>Memory history</h2><span class="panel-sub">since dashboard opened</span></div><div class="chart-wrap"><canvas id="chartMem_${vmId}"></canvas></div></div>
+		</div>
+
+		${projectsHtml || `<div class="panel"><div class="panel-head"><h2>Docker Compose projects</h2></div>${emptyHint("No compose projects configured for this VM's agent.")}</div>`}
+
+		<div class="panel">
+			<div class="panel-head"><h2>Obyte nodes</h2><span class="panel-sub">Click a node to see full blockchain metrics</span></div>
+			${nodesHtml}
+		</div>
+
+		<div class="panel">
+			<div class="panel-head"><h2>Command history</h2><span class="panel-sub">${cmdHistory.length} total</span></div>
+			${renderCommandTable(vmId, cmdHistory)}
+		</div>
+	`;
+}
+
+function renderProjectPanel(vmId, projectId, project) {
+	const containers = Object.entries(project.containers || {});
+	return `
+		<div class="panel" data-project-panel="${projectId}">
+			<div class="panel-head">
+				<h2>${esc(project.info?.name || projectId)}</h2>
+				<span class="panel-sub">${esc(project.info?.path || "")}</span>
+				<div class="inline-actions">
+					<button class="btn btn-sm" data-compose="${vmId}::${projectId}::up">Up</button>
+					<button class="btn btn-sm" data-compose="${vmId}::${projectId}::start">Start</button>
+					<button class="btn btn-sm" data-compose="${vmId}::${projectId}::stop">Stop</button>
+					<button class="btn btn-sm" data-compose="${vmId}::${projectId}::restart">Restart</button>
+					<button class="btn btn-sm" data-compose="${vmId}::${projectId}::pull">Pull</button>
+					<button class="btn btn-sm" data-compose="${vmId}::${projectId}::logs">Logs</button>
+					<button class="btn btn-sm btn-danger" data-compose="${vmId}::${projectId}::down">Down</button>
+					<button class="btn btn-sm btn-danger" data-compose="${vmId}::${projectId}::rm">Remove stopped</button>
+				</div>
+			</div>
+			<div class="table-wrap">
+				<table class="data-table">
+					<thead><tr><th>Container</th><th>Image</th><th>Status</th><th>Health</th><th>Restarts</th><th>Actions</th></tr></thead>
+					<tbody>
+						${
+							containers.length
+								? containers
+										.map(
+											([name, c]) => `<tr>
+								<td>${esc(name)}</td>
+								<td class="muted">${esc(c.image || "—")}</td>
+								<td><span class="badge ${c.status === "running" ? "b-good" : c.status === "not_found" ? "b-muted" : "b-bad"}">${esc(c.status || "—")}</span></td>
+								<td class="muted">${esc(c.health || "—")}</td>
+								<td class="muted">${c.restartCount ?? "—"}</td>
+								<td>
+									<button class="btn btn-sm" data-container-action="${vmId}::${name}::start">Start</button>
+									<button class="btn btn-sm" data-container-action="${vmId}::${name}::stop">Stop</button>
+									<button class="btn btn-sm" data-container-action="${vmId}::${name}::restart">Restart</button>
+								</td>
+							</tr>`
+										)
+										.join("")
+								: `<tr><td colspan="6" class="muted">No containers reported yet.</td></tr>`
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	`;
+}
+
+function renderCommandTable(vmId, entries) {
+	if (!entries.length) return emptyHint("No commands issued yet.");
+	return `<div class="table-wrap"><table class="data-table">
+		<thead><tr><th>Action</th><th>Target</th><th>Status</th><th>Requested by</th><th>When</th><th></th></tr></thead>
+		<tbody>
+			${entries
+				.slice(0, 20)
+				.map(([cmdId, cmd]) => {
+					const target = cmd.target?.projectId || cmd.target?.containerName || "—";
+					const statusBadge = { queued: "b-muted", running: "b-warn", success: "b-good", failed: "b-bad" }[cmd.status] || "b-muted";
+					return `<tr class="clickable" data-open-command="${vmId}::${cmdId}">
+						<td>${esc(cmd.type)}:${esc(cmd.action)}</td>
+						<td class="muted">${esc(target)}</td>
+						<td><span class="badge ${statusBadge}">${esc(cmd.status || "—")}</span></td>
+						<td class="muted">${esc(cmd.requestedBy || "—")}</td>
+						<td class="muted">${fmtAgo(cmd.requestedAt)}</td>
+						<td class="muted">view →</td>
+					</tr>`;
+				})
+				.join("")}
+		</tbody>
+	</table></div>`;
+}
+
+// ============================================================================
+// Node Detail view — every field the spec asked for; unavailable ones say so
+// ============================================================================
+function renderNodeDetailView(vmId, nodeId) {
+	const node = getNode(vmId, nodeId);
+	if (!node) return emptyHint("This node is no longer reporting.");
+	const unavailable = new Set(node._unavailable || []);
+	const u = (label) => (unavailable.has(label) ? " (not exposed by ocore)" : "");
+
+	return `
+		<div class="stat-grid">
+			<div class="stat-card"><span class="stat-label">State</span><span class="stat-value ${node.status?.state === "ok" ? "good" : node.status?.state === "unreachable" ? "bad" : "warn"}">${esc(node.status?.state || "unknown")}</span></div>
+			<div class="stat-card"><span class="stat-label">Latest stable MCI</span><span class="stat-value">${node.sync?.latestStableMci ?? "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Sync</span><span class="stat-value">${node.sync?.syncPercent != null ? fmtPct(node.sync.syncPercent) : "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Total units stored</span><span class="stat-value">${node.storage?.totalUnits ?? "—"}</span></div>
+			<div class="stat-card"><span class="stat-label">Throughput</span><span class="stat-value">${node.sync?.unitsPerSecond != null ? `${node.sync.unitsPerSecond} u/s` : "—"}</span></div>
+		</div>
+
+		<div class="grid-2">
+			<div class="panel">
+				<div class="panel-head"><h2>Node info</h2></div>
+				${kv([
+					["Label", esc(node.info?.label || nodeId)],
+					["Role", esc(node.info?.role || "—")],
+					["Container", esc(node.info?.containerName || "—")],
+					["Docker Compose project", esc(node.projectId || "—")],
+				])}
+			</div>
+			<div class="panel">
+				<div class="panel-head"><h2>Synchronization</h2></div>
+				${kv([
+					["Current MCI", node.sync?.latestStableMci ?? "—"],
+					["Latest stable MCI", node.sync?.latestStableMci ?? "—"],
+					["Latest network MCI", `not available${u("latestNetworkMci")}`, true],
+					["Sync percentage", node.sync?.syncPercent != null ? fmtPct(node.sync.syncPercent) : "n/a until ≥2 nodes report", node.sync?.syncPercent == null],
+					["Sync state", esc(node.sync?.syncState || "unknown")],
+					["Time behind", node.sync?.timeBehindSec != null ? `${node.sync.timeBehindSec}s (estimated)` : "—", node.sync?.timeBehindSec == null],
+					["Missing units (est.)", node.sync?.estimatedMissingUnits ?? "—", node.sync?.estimatedMissingUnits == null],
+					["Last synced unit", shortHash(node.sync?.lastUnit)],
+					["Last synced timestamp", node.sync?.lastUnitTimestamp ? new Date(node.sync.lastUnitTimestamp * 1000).toLocaleString() : "—"],
+					["Sync speed", node.sync?.unitsPerSecond != null ? `${node.sync.unitsPerSecond} units/sec (derived)` : "—", node.sync?.unitsPerSecond == null],
+				])}
+			</div>
+		</div>
+
+		<div class="grid-2">
+			<div class="panel">
+				<div class="panel-head"><h2>Storage / database</h2></div>
+				${kv([
+					["Engine", "sqlite (ocore default)"],
+					["Total units", node.storage?.totalUnits ?? "—"],
+					["Stable units", node.storage?.stableUnits ?? "—"],
+					["Free (tip) units", node.storage?.freeUnits ?? "—"],
+					["Database size", `not exposed over HTTP${u("dbSize")}`, true],
+					["Queries/sec", `not exposed${u("databaseQueriesPerSecond")}`, true],
+					["Fragmentation", `not exposed${u("databaseFragmentation")}`, true],
+				])}
+			</div>
+			<div class="panel">
+				<div class="panel-head"><h2>Network</h2></div>
+				${kv([
+					["Connected hub", node.network?.connectedHub ? esc(node.network.connectedHub) : (node.info?.role === "hub" ? "n/a (this is the hub)" : "—")],
+					["Connected peers", `not exposed over HTTP by ocore${u("connectedPeers")}`, true],
+					["Average peer latency", `not exposed${u("averagePeerLatency")}`, true],
+					["Messages sent/received", `not exposed${u("messagesSent")}`, true],
+					["Data up/down", `not exposed${u("dataUploaded")}`, true],
+				])}
+			</div>
+		</div>
+
+		${
+			node.witness
+				? `<div class="panel"><div class="panel-head"><h2>Witness</h2></div>${kv([
+						["Enabled", node.witness.enabled ? "yes" : "no"],
+						["Last witnessed unit", shortHash(node.witness.lastWitnessedUnit)],
+						["Witness reputation", `not a real ocore concept${u("witnessReputation")}`, true],
+				  ])}</div>`
+				: ""
+		}
+
+		<div class="panel">
+			<div class="panel-head"><h2>Activity &amp; API metrics</h2><span class="panel-sub">ocore doesn't expose these over HTTP by default — listed for completeness</span></div>
+			${kv([
+				["Total API requests", "not exposed", true],
+				["API requests/sec", "not exposed", true],
+				["RPC requests/sec", "not exposed", true],
+				["WebSocket requests/sec", "not exposed", true],
+				["Pending validation queue", "not exposed", true],
+				["Validation failures", "not exposed", true],
+				["Invalid / orphan units", "not exposed", true],
+			])}
+		</div>
+	`;
+}
+
+// ============================================================================
+// Alerts view
+// ============================================================================
+function renderAlertsView() {
+	const alerts = computeAlerts();
+	const t = prefs.thresholds;
+	return `
+		<div class="panel">
+			<div class="panel-head"><h2>Thresholds</h2><span class="panel-sub">Stored locally in this browser, applied to every alert computation</span></div>
+			<form class="settings-form" id="thresholdForm">
+				<div class="form-row">
+					<label>CPU % <input type="number" id="thCpu" value="${t.cpuPercent}" min="1" max="100" /></label>
+					<label>Memory % <input type="number" id="thMem" value="${t.memPercent}" min="1" max="100" /></label>
+					<label>Disk % <input type="number" id="thDisk" value="${t.diskPercent}" min="1" max="100" /></label>
+					<label>Heartbeat stale (sec) <input type="number" id="thHeartbeat" value="${t.heartbeatStaleSec}" min="5" /></label>
+					<label>Sync-behind (units) <input type="number" id="thSync" value="${t.syncBehindUnits}" min="1" /></label>
+				</div>
+				<div><button type="submit" class="btn btn-accent">Save thresholds</button></div>
+			</form>
+		</div>
+		<div class="panel">
+			<div class="panel-head"><h2>Active alerts</h2><span class="panel-sub">${alerts.length} total, recomputed live</span></div>
+			${renderAlertList(alerts)}
+		</div>
+	`;
+}
+
+// ============================================================================
+// Settings view
+// ============================================================================
+function renderSettingsView() {
+	return `
+		<div class="panel">
+			<div class="panel-head"><h2>Firebase connection</h2></div>
+			${kv([
+				["Database URL", esc(FIREBASE_DB_URL)],
+				["Auth", "none — public REST/SSE access, no API key or sign-in"],
+				["Status", state.connected ? "connected" : "disconnected"],
+			])}
+			<p class="muted" style="max-width:620px; line-height:1.6; font-size:13px; margin-top:14px;">
+				There's nothing to configure or forget here: this dashboard always talks to the URL above, unauthenticated, over plain HTTPS (<code>fetch</code>/<code>EventSource</code>) - no Firebase SDK, no API key, no login step. Point it at a different database with a <code>?db=&lt;url&gt;</code> query parameter if you ever need to.
+			</p>
+		</div>
+		<div class="panel">
+			<div class="panel-head"><h2>About</h2></div>
+			<p class="muted" style="max-width:620px; line-height:1.6; font-size:13px;">
+				This dashboard is a single static HTML file with no backend of its own — every VM's data arrives here directly from Firebase Realtime Database, in real time. Commands you issue (start/stop/restart/pull/logs/etc.) are written to <code>/commands/&lt;vmId&gt;</code> and picked up by that VM's agent over a Server-Sent Events stream. See <code>docs/ARCHITECTURE.md</code> for the full schema.
+			</p>
+		</div>
+	`;
+}
+
+// ============================================================================
+// Event delegation (attached once to the stable #stageContent container —
+// its children get replaced on every render, but clicks/submits still
+// bubble up to this listener regardless of what's currently inside)
+// ============================================================================
+function wireStageEvents() {
+	const content = document.getElementById("stageContent");
+	if (!content || content.dataset.wired) return;
+	content.dataset.wired = "1";
+
+	content.addEventListener("click", async (e) => {
+		const openVm = e.target.closest("[data-open-vm]");
+		if (openVm) {
+			state.selectedVmId = openVm.dataset.openVm;
+			return setView("vm-detail");
+		}
+		const openNode = e.target.closest("[data-open-node]");
+		if (openNode) {
+			const [vmId, nodeId] = openNode.dataset.openNode.split("::");
+			state.selectedVmId = vmId;
+			state.selectedNodeId = nodeId;
+			return setView("node-detail");
+		}
+		const openCmd = e.target.closest("[data-open-command]");
+		if (openCmd) {
+			const [vmId, cmdId] = openCmd.dataset.openCommand.split("::");
+			return openCommandModal(vmId, cmdId);
+		}
+		const composeBtn = e.target.closest("[data-compose]");
+		if (composeBtn) {
+			const [vmId, projectId, action] = composeBtn.dataset.compose.split("::");
+			if (["down", "rm"].includes(action) && !confirm(`Run "docker compose ${action}" for project "${projectId}" on ${vmId}? This will remove containers.`)) return;
+			composeBtn.disabled = true;
+			try {
+				const cmdId = await sendCommand(vmId, "compose", action, { projectId });
+				openCommandModal(vmId, cmdId);
+			} catch (err) {
+				alert(`Could not send command: ${err.message}`);
+			} finally {
+				composeBtn.disabled = false;
+			}
+			return;
+		}
+		const containerBtn = e.target.closest("[data-container-action]");
+		if (containerBtn) {
+			const [vmId, containerName, action] = containerBtn.dataset.containerAction.split("::");
+			if (action === "stop" && !confirm(`Stop container "${containerName}" on ${vmId}?`)) return;
+			containerBtn.disabled = true;
+			try {
+				const cmdId = await sendCommand(vmId, "container", action, { containerName });
+				openCommandModal(vmId, cmdId);
+			} catch (err) {
+				alert(`Could not send command: ${err.message}`);
+			} finally {
+				containerBtn.disabled = false;
+			}
+			return;
+		}
+	});
+
+	content.addEventListener("submit", (e) => {
+		if (e.target.id === "thresholdForm") {
+			e.preventDefault();
+			prefs.thresholds = {
+				cpuPercent: Number(document.getElementById("thCpu").value) || 85,
+				memPercent: Number(document.getElementById("thMem").value) || 90,
+				diskPercent: Number(document.getElementById("thDisk").value) || 90,
+				heartbeatStaleSec: Number(document.getElementById("thHeartbeat").value) || 30,
+				syncBehindUnits: Number(document.getElementById("thSync").value) || 20,
+			};
+			savePrefs(prefs);
+			renderCurrentView();
+		}
+	});
+}
+
+// ============================================================================
+// Command output modal
+// ============================================================================
+let openModalTarget = null; // { vmId, cmdId } | null
+
+function openCommandModal(vmId, cmdId) {
+	openModalTarget = { vmId, cmdId };
+	document.getElementById("commandModal").classList.add("is-open");
+	renderCommandModal();
+}
+function closeCommandModal() {
+	openModalTarget = null;
+	document.getElementById("commandModal").classList.remove("is-open");
+}
+function renderCommandModal() {
+	if (!openModalTarget) return;
+	const { vmId, cmdId } = openModalTarget;
+	const cmd = state.commands[vmId]?.[cmdId];
+	document.getElementById("commandModalTitle").textContent = cmd ? `${cmd.type}:${cmd.action} — ${cmd.target?.projectId || cmd.target?.containerName || ""}` : "Command";
+	const statusBadge = cmd ? { queued: "b-muted", running: "b-warn", success: "b-good", failed: "b-bad" }[cmd.status] || "b-muted" : "b-muted";
+	document.getElementById("commandModalBody").innerHTML = cmd
+		? `
+			<div style="margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+				<span class="badge ${statusBadge}">${esc(cmd.status)}</span>
+				<span class="muted" style="font-size:12px;">requested by ${esc(cmd.requestedBy || "—")} · ${fmtAgo(cmd.requestedAt)}</span>
+			</div>
+			${cmd.error ? `<div style="color: var(--danger); font-size:13px; margin-bottom:10px;">${esc(cmd.error)}</div>` : ""}
+			<div class="log-output">${esc(cmd.output || "(no output yet)")}</div>
+		`
+		: `<div class="empty-hint">Command not found.</div>`;
+}
+document.getElementById("commandModalClose").addEventListener("click", closeCommandModal);
+document.getElementById("commandModal").addEventListener("click", (e) => {
+	if (e.target.id === "commandModal") closeCommandModal();
+});
+
+// ============================================================================
+// Bootstrap - no login/config step, connects straight to FIREBASE_DB_URL
+// ============================================================================
+function boot() {
+	renderAppShell();
+	setView("global");
+	connectFirebase(FIREBASE_DB_URL);
+}
+
+boot();
+
+</script>
+</body>
+</html>
