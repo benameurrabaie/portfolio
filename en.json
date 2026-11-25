@@ -1,0 +1,277 @@
+{
+  "title": "English B2 Exam (January) - Questions and Answers",
+  "reading_text_1": {
+    "text_title": "Shifts in Higher Education",
+    "questions": {
+      "Q1": {
+        "question": "What is the main focus of the text?",
+        "options": {
+          "A": "The differences between schools and universities",
+          "B": "New trends and changes in higher education",
+          "C": "The history of universities",
+          "D": "The daily life of university students"
+        },
+        "answer": "B"
+      },
+      "Q2": {
+        "question": "Universities are using more digital tools to make learning more flexible.",
+        "type": "True/False",
+        "answer": "True"
+      },
+      "Q3": {
+        "question": "The text says that online and hybrid courses are becoming less common.",
+        "type": "True/False",
+        "answer": "False"
+      },
+      "Q4": {
+        "question": "Employers today want graduates who can adapt to new situations.",
+        "type": "True/False",
+        "answer": "True"
+      },
+      "Q5": {
+        "question": "The text mentions that universities now offer more hands-on learning opportunities.",
+        "type": "True/False",
+        "answer": "True"
+      },
+      "Q6": {
+        "question": "According to the text, practical skills are becoming less important in higher education.",
+        "type": "True/False",
+        "answer": "False"
+      }
+    }
+  },
+  "reading_text_2": {
+    "text_title": "AI-Powered Learning",
+    "questions": {
+      "Q7": {
+        "question": "What is one main advantage of using AI tools in education?",
+        "options": {
+          "A": "They replace teachers completely",
+          "B": "They make lessons longer and more difficult",
+          "C": "They stop teachers from planning creative lessons",
+          "D": "They help students learn at their own pace"
+        },
+        "answer": "D"
+      },
+      "Q8": {
+        "question": "According to the text, why might AI become a normal part of everyday learning in the future?",
+        "options": {
+          "A": "Because it removes the need for creative lesson planning",
+          "B": "Because it can completely replace teachers in most subjects",
+          "C": "Because it helps both students and teachers work more efficiently",
+          "D": "Because it forces students to study faster than before"
+        },
+        "answer": "C"
+      },
+      "Q9": {
+        "question": "The text suggests that AI can identify which topics individual students struggle with.",
+        "type": "True/False",
+        "answer": "True"
+      },
+      "Q10": {
+        "question": "According to the text, AI reduces the amount of time teachers can spend supporting students personally.",
+        "type": "True/False",
+        "answer": "False"
+      },
+      "Q11": {
+        "question": "The text mentions that some people still have concerns about how AI is used in education.",
+        "type": "True/False",
+        "answer": "True"
+      },
+      "Q12": {
+        "question": "The text states that AI already replaces teachers in many schools and universities.",
+        "type": "True/False",
+        "answer": "False"
+      },
+      "Q13": {
+        "question": "The text implies that AI may help make education more accessible in the future.",
+        "type": "True/False",
+        "answer": "True"
+      }
+    }
+  },
+  "listening_audio_1": {
+    "note": "Answers inferred (audio not available); please verify against the recording.",
+    "questions": {
+      "Q14": {
+        "question": "According to the passage, what is the biggest obstacle to developing intercultural awareness?",
+        "options": {
+          "A": "Learning too many foreign languages at the same time",
+          "B": "Working in teams with people from different countries",
+          "C": "Believing that one's own cultural habits are universal",
+          "D": "Not having enough opportunities to travel abroad"
+        },
+        "answer": "C"
+      },
+      "Q15": {
+        "question": "The passage suggests that intercultural awareness develops naturally as soon as people work in international teams.",
+        "type": "True/False",
+        "answer": "False"
+      },
+      "Q16": {
+        "question": "The passage implies that understanding other cultures also requires people to reflect on their own cultural assumptions.",
+        "type": "True/False",
+        "answer": "True"
+      },
+      "Q17": {
+        "question": "Drag the correct word into the corresponding gap (completed text).",
+        "answer": "Intercultural awareness is an essential skill in today's globalized world. It involves understanding how cultural backgrounds shape communication and behavior, and it helps people avoid misunderstandings in international settings. Developing this awareness requires effort, curiosity, and a willingness to question one's own assumptions, making it an important part of becoming an effective global citizen."
+      }
+    }
+  },
+  "listening_audio_2": {
+    "note": "Answers inferred (audio not available); please verify against the recording.",
+    "questions": {
+      "Q18": {
+        "question": "According to the audio, what is a major benefit of virtual exchange programs?",
+        "options": {
+          "A": "They allow students to avoid traditional classroom work",
+          "B": "They let students collaborate internationally without needing to travel",
+          "C": "They guarantee that all students will become fluent in foreign languages",
+          "D": "They replace the need for teachers in global learning"
+        },
+        "answer": "B"
+      },
+      "Q19": {
+        "question": "What can be inferred about the role of technology in modern education?",
+        "options": {
+          "A": "Technology limits students' ability to explore cultural differences",
+          "B": "Technology supports flexible learning and enhances global understanding",
+          "C": "Technology is only useful for improving academic test scores",
+          "D": "Technology is mainly used to reduce the number of subjects students study"
+        },
+        "answer": "B"
+      },
+      "Q20": {
+        "question": "According to the audio, why is intercultural awareness becoming more important in education?",
+        "options": {
+          "A": "Because cultural differences are becoming less noticeable",
+          "B": "Because technology makes cultural learning unnecessary",
+          "C": "Because schools want to reduce the amount of academic content",
+          "D": "Because students must learn to interact effectively in a connected world"
+        },
+        "answer": "D"
+      },
+      "Q21": {
+        "question": "Select the correct word from each drop-down menu: Modern [1] increasingly focuses on global competence by integrating intercultural awareness into [2]. Digital tools - such as virtual [3] and online international classrooms - allow students to collaborate across cultures. At the same time, technologies like AI and [4] learning platforms make education more flexible and accessible. Together, these [5] show that future learning will be both technologically advanced and globally connected.",
+        "answer": {
+          "1": "education",
+          "2": "curricula",
+          "3": "exchange",
+          "4": "adaptive",
+          "5": "technologies"
+        },
+        "note": "Best-fitting words; drop-down options were not in the file."
+      }
+    }
+  },
+  "grammar_Q22": {
+    "instruction": "Choose the correct form of the verb.",
+    "questions": {
+      "1": {
+        "question": "Developing intercultural awareness becomes easier once students realise how much their own assumptions ___ their communication with others.",
+        "answer": "influence"
+      },
+      "2": {
+        "question": "Many young researchers say that entrepreneurship and innovation ___ most of the recent breakthroughs in their fields.",
+        "answer": "have driven"
+      },
+      "3": {
+        "question": "Universities ___ several new educational trends over the past decade, including virtual exchange programmes and AI-supported learning.",
+        "answer": "have adopted"
+      },
+      "4": {
+        "question": "My supervisor told me that I ___ to refine my research questions before moving to the next stage of the dissertation journey.",
+        "answer": "needed"
+      },
+      "5": {
+        "question": "If the candidate ___ more thoroughly, she ___ the questions during her research defence with greater confidence.",
+        "answer": [
+          "had prepared",
+          "would have answered"
+        ]
+      }
+    }
+  },
+  "vocabulary_true_false": {
+    "1": {
+      "question": "Asynchronous learning requires all students to be online at the same time in order to participate effectively.",
+      "type": "True/False",
+      "answer": "False"
+    },
+    "2": {
+      "question": "A stereotype is an oversimplified idea about a group of people that may lead to unfair assumptions.",
+      "type": "True/False",
+      "answer": "True"
+    },
+    "3": {
+      "question": "A business plan usually includes goals, strategies, and financial projections for a new project or company.",
+      "type": "True/False",
+      "answer": "True"
+    },
+    "4": {
+      "question": "A prototype is the final version of a product that is ready to be sold to customers.",
+      "type": "True/False",
+      "answer": "False"
+    },
+    "5": {
+      "question": "Hybrid learning combines both face-to-face instruction and online learning experiences.",
+      "type": "True/False",
+      "answer": "True"
+    }
+  },
+  "matching_definitions": [
+    {
+      "definition": "A formal academic event in which a researcher presents and justifies their work before a committee.",
+      "term": "dissertation defence"
+    },
+    {
+      "definition": "A new business created to develop an innovative idea, product, or service.",
+      "term": "start-up"
+    },
+    {
+      "definition": "A new direction or practice that becomes increasingly common in teaching and learning.",
+      "term": "educational trend"
+    },
+    {
+      "definition": "The ability to understand and respect cultural differences in communication, values, and behaviour.",
+      "term": "intercultural awareness"
+    },
+    {
+      "definition": "A willingness to consider new ideas, perspectives, or ways of thinking without prejudice.",
+      "term": "open-mindedness"
+    }
+  ],
+  "rearrange_words": {
+    "1": {
+      "scrambled": "cultures / different / reduces / misunderstandings / intercultural / awareness / across",
+      "answer": "Intercultural awareness across different cultures reduces misunderstandings."
+    },
+    "2": {
+      "scrambled": "arguments / clear / defence / confident / requires / research / English / in / a",
+      "answer": "A confident defence in English requires research, clear arguments."
+    },
+    "3": {
+      "scrambled": "learning / hybrid / are / universities / flexible / more / offer / to / models / becoming",
+      "answer": "Universities are becoming more flexible to offer hybrid learning models."
+    },
+    "4": {
+      "scrambled": "innovative / researchers / solutions / develop / entrepreneurs / often / like",
+      "answer": "Innovative researchers often develop solutions like entrepreneurs."
+    },
+    "5": {
+      "scrambled": "planning / requires / careful / every / dissertation / stage / the / journey / of",
+      "answer": "The dissertation journey requires careful planning of every stage."
+    }
+  },
+  "reorder_paragraph": {
+    "instruction": "Reorder the scrambled sentences to form a coherent paragraph.",
+    "correct_order": [
+      "Brian Chesky co-founded Airbnb in 2008 after renting out air mattresses in his apartment to earn some extra money.",
+      "At first, many investors did not believe in the idea, so the founders had to improve their prototype and business plan several times.",
+      "The idea challenged traditional hotels and changed the way people travel and find accommodation.",
+      "His open-mindedness and ability to learn from different cultures helped the company grow quickly in the global market.",
+      "Today, Airbnb is used around the world, and Chesky's story is often shared in universities as an example of creativity and resilience."
+    ]
+  }
+}
